@@ -1,17 +1,16 @@
 import pandas as pd
 import re
+from pickle import dump
 from itertools import takewhile, chain
 from fractions import Fraction
 
 # Read csv file
-recipes = pd.read_csv(r"recipes.csv")
-raw_recipes = pd.read_csv(r"RAW_recipes.csv")
+recipes = pd.read_csv(r"recipes.csv", index_col=1)
+del recipes[recipes.columns[0]]
+ingre_list = pd.read_csv(r"RAW_recipes.csv")['ingredients']
 
 # Delete duplicate recipes
-recipes['recipe_name'] = recipes['recipe_name'].drop_duplicates().reset_index(drop = True)
-
-# Delete null values in column recipe_name
-recipes = recipes.dropna(subset = 'recipe_name')
+recipes = recipes.drop_duplicates()
 
 # Create a dataframe nutritions
 nutritions = recipes['nutrition']
@@ -85,9 +84,6 @@ for i in range(len(directions)):
 # Turn directions type from series to dataframe
 directions = directions.apply(pd.Series)
 
-# Create dataframe ingredients
-ingre_list = raw_recipes['ingredients']
-
 # Create an ingredient list for users to search
 ingre_list = ingre_list.str.replace(r'[\[\]\'"]', '', regex = True).str.split(', ')
 user_ingre_list = list(set(chain.from_iterable(ingre_list)))
@@ -138,10 +134,10 @@ cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("
 
 # Drop unneeded and rename columns
 cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data.columns[0], 'prep_time', 'cook_time', 'yield', 'url', 'cuisine_path', 'nutrition', 'timing'])
-cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'recipe_name' : 'Recipe name', 'total_time' : 'Total time', 'servings' : 'Servings', 'directions' : 'Instructions', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
+cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'total_time' : 'Total time', 'servings' : 'Servings', 'directions' : 'Instructions', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
 
 # Rearrange columns
-cleaned_recipes_data = cleaned_recipes_data[['Recipe name', 'Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
+cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
 
 # Use boolean mask to create new dataframe of cuisine categorized by region
 datatype = 'dict'
@@ -163,3 +159,14 @@ cleaned_recipes_data
 
 # Export to csv file
 cleaned_recipes_data.to_csv(r"d:\Hang\Cleaned Recipes Dataset.csv")
+
+#Serialize and deserialize
+with open('clean_data.pkl', 'wb') as f:
+   dump(user_ingre_list, f)
+   dump(cleaned_recipes_data, f)
+   dump(cuisine_region, f)
+   dump(cuisine_dessert, f)
+   dump(cuisine_maindish, f)
+   dump(cuisine_sidedish, f)
+   dump(cuisine_drink, f)
+   dump(cuisine_appetizer_snack, f)
