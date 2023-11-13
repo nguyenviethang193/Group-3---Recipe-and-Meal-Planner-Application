@@ -144,10 +144,17 @@ cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'recipe_name' : 'R
 # Rearrange columns
 cleaned_recipes_data = cleaned_recipes_data[['Recipe name', 'Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
 
-# Use boolean mask to create new dataframe categorized by region
+# Use boolean mask to create new dataframe of cuisine categorized by region
 datatype = 'dict'
 mask = cleaned_recipes_data['Cuisine Category'].apply(lambda x: isinstance(x, eval(datatype)))
 cuisine_region = cleaned_recipes_data[mask]
+
+# Create dataframe for other categories, na check for NaN values
+cuisine_dessert = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Desserts', case = False, na = False)]
+cuisine_maindish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Main Dishes', case = False, na = False)]
+cuisine_sidedish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Side Dish', case = False, na = False)]
+cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Drinks Recipes', case = False, na = False)]
+cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Appetizers and Snacks', case = False, na = False)]
 
 # Check for null of results
 cleaned_recipes_data.isnull().sum()
