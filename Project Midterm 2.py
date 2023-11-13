@@ -4,8 +4,8 @@ from itertools import takewhile, chain
 from fractions import Fraction
 
 # Read csv file
-recipes = pd.read_csv(r"C:\Users\Tran Duy Anh\Documents\NEU Study\Second year\First term\Programming for Data Science\Project Midterm 2\Dataset\recipes.csv")
-raw_recipes = pd.read_csv(r"C:\Users\Tran Duy Anh\Documents\NEU Study\Second year\First term\Programming for Data Science\Project Midterm 2\Dataset\RAW_recipes.csv")
+recipes = pd.read_csv(r"recipes.csv")
+raw_recipes = pd.read_csv(r"RAW_recipes.csv")
 
 # Delete duplicate recipes
 recipes['recipe_name'] = recipes['recipe_name'].drop_duplicates().reset_index(drop = True)
@@ -56,9 +56,9 @@ cuisine.rename(columns = {cuisine.columns[1] : 'Country'}, inplace = True)
 
 # Group the cuisine into the 6 main categories
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Fruits and Vegetables","Desserts")
-cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Soup Recipes","Side Dish").str.replace("Soups, Stews and Chili Recipes","Side Dish").str.replace("Sauces and Condiments","Side Dish").str.replace("Bread","Side Dish").str.replace("Quick Bread Recipes","Side Dish").str.replace("Quick Side Dish Recipes","Side Dish")
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Soup Recipes|Soups, Stews and Chili Recipes|Sauces and Condiments|Bread|Quick Bread Recipes|Quick Side Dish Recipes","Side Dish", regex=True)
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Salad","Appetizers and Snacks")
-cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Seafood","Main Dishes").str.replace("Meat and Poultry","Main Dishes").str.replace("BBQ & Grilling","Main Dishes").str.replace("Everyday Cooking","Main Dishes").str.replace("Holidays and Events Recipes","Main Dishes").str.replace("Breakfast and Brunch","Main Dishes")
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Seafood|Meat and Poultry|BBQ & Grilling|Everyday Cooking|Holidays and Events Recipes|Breakfast and Brunch","Main Dishes", regex=True)
 
 # Convert cuisine of particular country/continents/brands into dict
 for i in range(len(cuisine)):
@@ -90,11 +90,10 @@ ingre_list = raw_recipes['ingredients']
 
 # Create an ingredient list for users to search
 ingre_list = ingre_list.str.replace(r'[\[\]\'"]', '', regex = True).str.split(', ')
-main_list = recipes['ingredients']
-new_list = list(set(chain.from_iterable(ingre_list)))
+user_ingre_list = list(set(chain.from_iterable(ingre_list)))
 
 # Replace plural units with singular form
-recipes['ingredients'] = main_list.str.replace(r' \(.+?\)', '', regex=True).str.replace('  ', ' ').str.strip()
+recipes['ingredients'] = recipes['ingredients'].str.replace(r' \(.+?\)', '', regex=True).str.replace(r'\s+', ' ', regex=True).str.strip()
 es_list = ['pinches', 'pouches', 'dashes', 'peaches', 'tomatoes', 'bunches', 'mangoes']
 exception = ['skinless', 'boneless', 'leaves', 'seedless', 'strawberries']
 def remove_word_tail(s):
@@ -106,7 +105,7 @@ def remove_word_tail(s):
     s = s.replace(i, i[:-1])
   return s
 recipes['ingredients'] = recipes['ingredients'].apply(remove_word_tail)
-new_list = [i for i in new_list if any(i in j for j in main_list)]
+user_ingre_list = [i for i in user_ingre_list if any(i in j for j in recipes['ingredients'])]
 recipes['ingredients'] = recipes['ingredients'].str.split(r', (?=[\d½¾¼⅔⅓⅞⅝⅛⅜])', regex = True)
 
 # Convert the quantity of ingredients into fraction form
@@ -163,4 +162,4 @@ cleaned_recipes_data.isnull().sum()
 cleaned_recipes_data
 
 # Export to csv file
-cleaned_recipes_data.to_csv(r"C:\Users\Tran Duy Anh\Documents\NEU Study\Second year\First term\Programming for Data Science\Project Midterm 2\Dataset\Cleaned Recipes Dataset.csv")
+cleaned_recipes_data.to_csv(r"d:\Hang\Cleaned Recipes Dataset.csv")
