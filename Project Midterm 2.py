@@ -6,6 +6,7 @@ from fractions import Fraction
 
 # Read csv file
 recipes = pd.read_csv(r"recipes.csv", index_col=1)
+recipes.index.name = 'Recipe Name'
 del recipes[recipes.columns[0]]
 ingre_list = pd.read_csv(r"RAW_recipes.csv")['ingredients']
 
