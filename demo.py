@@ -75,3 +75,5 @@ for i in range(4):
                         <b>Nutrition:</b><br>{item['Total Fat']}g Fat &nbsp;{item['Total Carbohydrate']}g Carbs &nbsp;
                         {item['Protein']}g Protein<br><br>
                         <b>Ingredients:</b><br>{ingredients}<br><b>Instruction:</b><br>{instruction}</p>""", unsafe_allow_html=True)
+
+
