@@ -142,12 +142,14 @@ cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'recipe_name' : 'R
 # Rearrange columns
 cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
 
-# Create dataframe for other categories, na check for NaN values
-cuisine_dessert = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Desserts', case = False, na = False)]
-cuisine_maindish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Main Dishes', case = False, na = False)]
-cuisine_sidedish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Side Dish', case = False, na = False)]
-cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Drinks Recipes', case = False, na = False)]
-cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Appetizers and Snacks', case = False, na = False)]
+# Create dataframe for other categories
+list_region = ['European', 'Latin American', 'Asian', 'African', 'Brands']
+cuisine_dessert = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Desserts']
+cuisine_maindish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Main Dishes']
+cuisine_sidedish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Side Dishes']
+cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Drinks']
+cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Appetizers and Snacks']
+cuisine_region = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].isin(list_region)]
 
 # Check for null of results
 cleaned_recipes_data.isnull().sum()
