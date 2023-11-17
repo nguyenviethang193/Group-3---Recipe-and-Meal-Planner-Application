@@ -49,7 +49,7 @@ if category_df['Choice'].iloc[0]: #If cuisine is chosen
 
 result = ds.final_recipes_data
 if 'num' not in ss:
-    ss['num'] = 0
+    ss.num = 0
 
 col1 = st.columns([24, 1, 1])
 with col1[1]:
@@ -58,8 +58,8 @@ with col1[1]:
 with col1[2]:
     if st.button('\>') and ss.num < len(result.index) - 4:
         ss.num += 4
-col2 = st.columns(4)
 
+col2 = st.columns(4)
 for i in range(4):
     with col2[i]:
         item = result.iloc[ss.num + i]
@@ -69,7 +69,7 @@ for i in range(4):
             ingredients = ''
             for j in item['Ingredients']:
                 ingredients += f'{item['Ingredients'][j]} {j}<br>'
-            st.markdown(f"""<p style='font-size: 12px;'>
+            st.markdown(f"""<p style='font-size: 12px; color: black; text-align: justify;'>
                         <b>Rating:</b> {item['Rating']}⭐<br><br><b>Total time:</b> {item['Total time']} &nbsp;&nbsp;&nbsp;&nbsp;
                         <b>Servings: </b>{item['Servings']}<br><br>
                         <b>Nutrition:</b><br>{item['Total Fat']}g Fat &nbsp;{item['Total Carbohydrate']}g Carbs &nbsp;

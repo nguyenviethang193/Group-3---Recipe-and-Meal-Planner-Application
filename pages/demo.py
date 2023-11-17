@@ -3,7 +3,6 @@ from streamlit import session_state as ss
 import pandas as pd
 import deserialize as ds
 
-st.set_page_config(layout='wide')
 st.header('My Cookbooks')
 
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
@@ -24,7 +23,7 @@ with display_col0[0]:
             ss.add += 1
         if ss.add % 2 == 0:
             with display_col0[2]:
-                st.subheader('Create a new cookbook')
+                st.write('Create a new cookbook')
                 title = st.text_input('Title *')
                 description = st.text_input('Description')
                 recipe = st.multiselect('Choose your recipes (Optional)', ds.final_recipes_data.index)
@@ -36,7 +35,7 @@ with display_col0[0]:
                         new_cookbook = {'Title': title, 'Description': description, 'Recipe list': new_cookbook_recipe}
                         ss.mycookbook.loc[len(ss.mycookbook)] = new_cookbook
                         ss.add += 1
-                        display_col1 = st.columns([6, 1])
+                        display_col1 = st.columns([5, 1])
                         with display_col1[0]:
                             st.success('New Cookbook created')
                         with display_col1[1]:
