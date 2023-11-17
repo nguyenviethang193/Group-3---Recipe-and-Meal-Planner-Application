@@ -13,8 +13,8 @@ ingre_list = pd.read_csv(r"RAW_recipes.csv")['ingredients']
 # Delete duplicate recipes
 recipes = recipes.drop_duplicates()
 
-# Create a dataframe nutritions
-nutritions = recipes['nutrition']
+# Create a copy dataframe nutritions to avoid copy warning error
+nutritions = recipes['nutrition'].copy()
 
 # Clean dataframe nutritions
 # Choose 3 most common nutrition in recipes: Total Fat, Total Carbohydrate, Protein
@@ -56,24 +56,26 @@ cuisine.rename(columns = {cuisine.columns[1] : 'Country'}, inplace = True)
 
 # Group the cuisine into the 6 main categories
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Fruits and Vegetables","Desserts")
-cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Soup Recipes|Soups, Stews and Chili Recipes|Sauces and Condiments|Bread|Quick Bread Recipes|Quick Side Dish Recipes","Side Dish", regex=True)
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Soup Recipes","Side Dish").str.replace("Soups, Stews and Chili Recipes","Side Dish").str.replace("Sauces and Condiments","Side Dish").str.replace("Bread","Side Dish").str.replace("Quick Bread Recipes","Side Dish").str.replace("Quick Side Dish Recipes","Side Dish")
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Salad","Appetizers and Snacks")
-cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Seafood|Meat and Poultry|BBQ & Grilling|Everyday Cooking|Holidays and Events Recipes|Breakfast and Brunch","Main Dishes", regex=True)
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Seafood","Main Dishes").str.replace("Meat and Poultry","Main Dishes").str.replace("BBQ & Grilling","Main Dishes").str.replace("Everyday Cooking","Main Dishes").str.replace("Holidays and Events Recipes","Main Dishes").str.replace("Breakfast and Brunch","Main Dishes")
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Drinks Recipes","Drinks")
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Side Dish","Side Dishes")
 
 # Convert cuisine of particular country/continents/brands into dict
 for i in range(len(cuisine)):
     if cuisine['Cuisine Category'][i] == 'Cuisine':
-        cuisine['Cuisine Category'][i] = {cuisine['Cuisine Category'][i] : cuisine['Country'][i]}
+        cuisine['Cuisine Category'][i] = cuisine['Country'][i]
     elif cuisine['Cuisine Category'][i] == 'Mexican':
-        cuisine['Cuisine Category'][i] = {'Cuisine' : 'Latin America'}
+        cuisine['Cuisine Category'][i] = 'Latin American'
     elif cuisine['Cuisine Category'][i] == 'Trusted Brands: Recipes and Tips':
-        cuisine['Cuisine Category'][i] = {'Cuisine' : 'Brands'}
+        cuisine['Cuisine Category'][i] = 'Brands'
 
 # Drop column Country
 cuisine.drop('Country', axis = 1, inplace = True)
 
 # Create dataframe directions
-directions = recipes['directions']
+directions = recipes['directions'].copy()
 
 # Remove newline space, name of the author and numbering the steps
 for i in range(len(directions)):
@@ -128,22 +130,17 @@ recipes['ingredients'] = recipes['ingredients'].apply(change_quantity)
 recipes['ingredients'] = recipes['ingredients'].apply(lambda x: {i[1]: i[0] for i in x})
 
 # Combine dataframes horizontally
-cleaned_recipes_data = pd.concat([recipes, cuisine, nutritions], axis = 1)
+cleaned_recipes_data = pd.concat([recipes, directions, cuisine, nutritions], axis = 1)
 
 # Replace null values in total time column
 cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("Unkown total time")
 
 # Drop unneeded and rename columns
-cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data.columns[0], 'prep_time', 'cook_time', 'yield', 'url', 'cuisine_path', 'nutrition', 'timing'])
-cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'total_time' : 'Total time', 'servings' : 'Servings', 'directions' : 'Instructions', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
+cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data.columns[0], 'prep_time', 'cook_time', 'yield', 'url', 'cuisine_path', 'nutrition', 'timing', 'directions'])
+cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'recipe_name' : 'Recipe name', 'total_time' : 'Total time', 'servings' : 'Servings', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
 
 # Rearrange columns
 cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
-
-# Use boolean mask to create new dataframe of cuisine categorized by region
-datatype = 'dict'
-mask = cleaned_recipes_data['Cuisine Category'].apply(lambda x: isinstance(x, eval(datatype)))
-cuisine_region = cleaned_recipes_data[mask]
 
 # Create dataframe for other categories, na check for NaN values
 cuisine_dessert = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Desserts', case = False, na = False)]
