@@ -131,7 +131,7 @@ recipes['ingredients'] = recipes['ingredients'].apply(lambda x: {i[1]: i[0] for 
 cleaned_recipes_data = pd.concat([recipes, cuisine, nutritions], axis = 1)
 
 # Replace null values in total time column
-cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("Unkown total time")
+cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("Unkown")
 
 # Drop unneeded and rename columns
 cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data.columns[0], 'prep_time', 'cook_time', 'yield', 'url', 'cuisine_path', 'nutrition', 'timing'])

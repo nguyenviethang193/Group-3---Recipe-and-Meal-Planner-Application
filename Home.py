@@ -29,49 +29,104 @@ with display_col[2]:
     find = st.button(':mag_right:')
 
 #Category checkbox
+if 'num' not in ss:
+        ss.num = [0]
+if 'result' not in ss:
+    ss.result = pd.DataFrame({'Dataset': [ds.final_recipes_data]}, index=['default'])
+
 category_list = ['Cuisine', 'Appetizers and Snacks', 'Main Dishes', 'Side Dishes', 'Desserts', 'Drinks']
 dataset = [ds.cuisine_region_list, ds.appetizer_snack_list, ds.maindish_list, ds.sidedish_list, ds.dessert_list, ds.drink_list]
 category_df = pd.DataFrame({'Dataset': dataset}, index=category_list)
 category_df['Choice'] = False
 st.write('Category')
-checks = st.columns(6)
 
+checks = st.columns(6)
 for i in range(6):
     with checks[i]:
         category_df['Choice'].iloc[i] = st.checkbox(category_list[i])
 
-
-region_list = ['African', 'Asian', 'Brands', 'European', 'Latin America', 'Middle Eastern']
+region_list = ['African', 'Asian', 'Brands', 'European', 'Latin American', 'Middle Eastern']
 region_choice = [False for i in range(6)]
 if category_df['Choice'].iloc[0]: #If cuisine is chosen
     for i in range(6):
         region_choice[i] = st.checkbox(region_list[i])
 
-result = ds.final_recipes_data
-if 'num' not in ss:
-    ss.num = 0
+if find:
+    if len(category_df[category_df['Choice'] == True]) != 0:
+        ss.result = category_df[category_df['Choice'] == True].drop('Choice', axis=1)
+        if any(i == True for i in region_choice) :
+            ss.result = ss.result.drop(labels='Cuisine')
+            for i in range(len(region_choice)):
+                if region_choice[i] == True:
+                    region_set = ds.cuisine_region_list[ds.cuisine_region_list['Cuisine Category'] == {'Cuisine': region_list[i]}]
+                    new_row = pd.Series({'Dataset': region_set}, name=region_list[i])
+                    ss.result = pd.concat([ss.result, new_row.to_frame().T])
+    if len(my_ingre) != 0:
+        for i in ss.result.index:
+            category_ingre = ss.result.loc[i, 'Dataset'].copy()
+            mask = category_ingre['Ingredients'].apply(lambda x: all(any(ingre in key for key in x.keys()) for ingre in my_ingre))
+            category_ingre = category_ingre[mask]
+            ss.result.at[i, 'Dataset'] = category_ingre
+    ss.num = [0 for i in range(len(ss.result))]
 
-col1 = st.columns([24, 1, 1])
-with col1[1]:
-    if st.button('<') and ss.num >= 4:
-        ss.num -= 4
-with col1[2]:
-    if st.button('\>') and ss.num < len(result.index) - 4:
-        ss.num += 4
+#Display left right search
+for k in range(len(ss.result)):
+    if  ss.result.iloc[k]['Dataset'].empty:
+        st.write('No results')
+    else:
+        category_set = ss.result.iloc[k]['Dataset']
+        col1 = st.columns([24, 1, 1])
+        with col1[0]:
+            if ss.result.index[k] != 'default':
+                st.write('/' + ss.result.index[k])
+        with col1[1]:
+            if st.button('<', key=ss.result.index[k]) and ss.num[k] >= 5:
+                ss.num[k] -= 5
+        with col1[2]:
+            if st.button('\>', key=ss.result.index[k]+' ') and ss.num[k] < len(category_set) - 5:
+                ss.num[k] += 5
+        st.write(ss.num[k])
+        #Display recipes
+        col2 = st.columns(5)
+        if 'clicked_num' not in ss:
+            ss.clicked_num = -1
+        
+        var = 5
+        if ss.num[k] >= len(category_set) - 5:
+            var = len(category_set) - ss.num[k]
+        for i in range(var):
+            with col2[i]:
+                st.image(category_set.iloc[ss.num[k] + i, -1])
+                if st.button(category_set.index[ss.num[k] + i]):
+                    ss.clicked_num = ss.num[k] + i
 
-col2 = st.columns(4)
-for i in range(4):
-    with col2[i]:
-        item = result.iloc[ss.num + i]
-        st.image(item['Image link'])
-        with st.expander(result.index[ss.num + i]):
+        if ss.clicked_num != -1:
+            item = category_set.iloc[ss.clicked_num]
             instruction = item['Instructions'].replace('\n', '<br>')
             ingredients = ''
             for j in item['Ingredients']:
                 ingredients += f'{item['Ingredients'][j]} {j}<br>'
-            st.markdown(f"""<p style='font-size: 12px; color: black; text-align: justify;'>
-                        <b>Rating:</b> {item['Rating']}⭐<br><br><b>Total time:</b> {item['Total time']} &nbsp;&nbsp;&nbsp;&nbsp;
-                        <b>Servings: </b>{item['Servings']}<br><br>
-                        <b>Nutrition:</b><br>{item['Total Fat']}g Fat &nbsp;{item['Total Carbohydrate']}g Carbs &nbsp;
-                        {item['Protein']}g Protein<br><br>
-                        <b>Ingredients:</b><br>{ingredients}<br><b>Instruction:</b><br>{instruction}</p>""", unsafe_allow_html=True)
+            for i in my_ingre:
+                ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
+            col3 = st.columns(2)
+            with col3[0]:
+                st.write(f'**Rating:** {item['Rating']}⭐')
+                col4 = st.columns(2)
+                with col4[0]:
+                    st.write(f'**Total time:** {item['Total time']}')
+                with col4[1]:
+                    st.write(f'**Servings:** {item['Servings']}')
+                st.write(f'**Nutrition:**')
+                col5 = st.columns([1, 1, 1])
+                with col5[0]:
+                    st.write(f'{item['Total Fat']}g Fat')
+                with col5[1]:
+                    st.write(f'{item['Total Carbohydrate']}g Carbs')
+                with col5[2]:
+                    st.write(f'{item['Protein']}g Protein')
+                st.write(f'**Ingredients:**')
+                st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
+            with col3[1]:
+                st.write('**Instruction:**')
+                st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+            ss.clicked_num = -1
