@@ -14,7 +14,7 @@ ingre_list = pd.read_csv(r"RAW_recipes.csv")['ingredients']
 recipes = recipes.drop_duplicates()
 
 # Create a dataframe nutritions
-nutritions = recipes['nutrition']
+nutritions = recipes['nutrition'].copy()
 
 # Clean dataframe nutritions
 # Choose 3 most common nutrition in recipes: Total Fat, Total Carbohydrate, Protein
@@ -22,11 +22,11 @@ a = 'Total Fat'
 b = 'Total Carbohydrate'
 c = 'Protein'
 for i in range(len(nutritions)):
-    l = re.split(r',', nutritions[i])
-    nutritions[i] = [i for i in l if (a in i) or (b in i) or (c in i)]
-    for j in range(len(nutritions[i])):
-        nutritions[i][j] = re.sub(r'\b\d+%', "", nutritions[i][j]) # Remove percentage number 
-        nutritions[i][j] = re.sub(r'\D', "", nutritions[i][j]) # Remove other words, keep only number for gram in nutritions
+    l = re.split(r',', nutritions.iloc[i])
+    nutritions.iloc[i] = [i for i in l if (a in i) or (b in i) or (c in i)]
+    for j in range(len(nutritions.iloc[i])):
+        nutritions.iloc[i][j] = re.sub(r'\b\d+%', "", nutritions.iloc[i][j]) # Remove percentage number 
+        nutritions.iloc[i][j] = re.sub(r'\D', "", nutritions.iloc[i][j]) # Remove other words, keep only number for gram in nutritions
 
 # Turn nutritions type from series to dataframe
 nutritions = nutritions.apply(pd.Series)
@@ -47,12 +47,12 @@ nutritions['Protein'] = nutritions['Protein'].astype(float)
 # Create cuisine seperate series
 cuisine = recipes['cuisine_path'].str.split('/', expand = True)
 
+# Rename the columns
+cuisine.rename(columns = {cuisine.columns[1] : 'Cuisine Category'}, inplace = True)
+cuisine.rename(columns = {cuisine.columns[2] : 'Country'}, inplace = True)
+
 # Drop index and unneeded columns
 cuisine = cuisine.drop([cuisine.columns[0], cuisine.columns[3], cuisine.columns[4], cuisine.columns[5]], axis = 1)
-
-# Rename the columns
-cuisine.rename(columns = {cuisine.columns[0] : 'Cuisine Category'}, inplace = True)
-cuisine.rename(columns = {cuisine.columns[1] : 'Country'}, inplace = True)
 
 # Group the cuisine into the 6 main categories
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Fruits and Vegetables","Desserts")
@@ -62,28 +62,31 @@ cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Seafood|
 
 # Convert cuisine of particular country/continents/brands into dict
 for i in range(len(cuisine)):
-    if cuisine['Cuisine Category'][i] == 'Cuisine':
-        cuisine['Cuisine Category'][i] = {cuisine['Cuisine Category'][i] : cuisine['Country'][i]}
-    elif cuisine['Cuisine Category'][i] == 'Mexican':
-        cuisine['Cuisine Category'][i] = {'Cuisine' : 'Latin America'}
-    elif cuisine['Cuisine Category'][i] == 'Trusted Brands: Recipes and Tips':
-        cuisine['Cuisine Category'][i] = {'Cuisine' : 'Brands'}
+    if cuisine['Cuisine Category'].iloc[i] == 'Cuisine':
+        cuisine['Cuisine Category'].iloc[i] = cuisine['Country'].iloc[i]
+    elif cuisine['Cuisine Category'].iloc[i] == 'Mexican':
+        cuisine['Cuisine Category'].iloc[i] = 'Latin American'
+    elif cuisine['Cuisine Category'].iloc[i] == 'Trusted Brands: Recipes and Tips':
+        cuisine['Cuisine Category'].iloc[i] = 'Brands'
 
 # Drop column Country
 cuisine.drop('Country', axis = 1, inplace = True)
 
 # Create dataframe directions
-directions = recipes['directions']
+directions = recipes['directions'].copy()
 
 # Remove newline space, name of the author and numbering the steps
 for i in range(len(directions)):
-    steps = directions[i].split('\n')
+    steps = directions.iloc[i].split('\n')
     steps = list(takewhile(lambda x: x != "", steps)) # Takes all the element that is different from ""
     steps = [steps for steps in steps if steps.strip()] 
-    directions[i] = '\n'.join(f"{i+1}. {path}" for i, path in enumerate(steps))
+    directions.iloc[i] = '\n'.join(f"{i+1}. {path}" for i, path in enumerate(steps))
 
 # Turn directions type from series to dataframe
 directions = directions.apply(pd.Series)
+
+# Rename the directions columns
+directions.rename(columns = {directions.columns[0] : 'Instructions'}, inplace = True)
 
 # Create an ingredient list for users to search
 ingre_list = ingre_list.str.replace(r'[\[\]\'"]', '', regex = True).str.split(', ')
@@ -128,40 +131,31 @@ recipes['ingredients'] = recipes['ingredients'].apply(change_quantity)
 recipes['ingredients'] = recipes['ingredients'].apply(lambda x: {i[1]: i[0] for i in x})
 
 # Combine dataframes horizontally
-cleaned_recipes_data = pd.concat([recipes, cuisine, nutritions], axis = 1)
+cleaned_recipes_data = pd.concat([recipes, directions, cuisine, nutritions], axis = 1)
 
 # Replace null values in total time column
 cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("Unkown")
 
 # Drop unneeded and rename columns
-cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data.columns[0], 'prep_time', 'cook_time', 'yield', 'url', 'cuisine_path', 'nutrition', 'timing'])
-cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'total_time' : 'Total time', 'servings' : 'Servings', 'directions' : 'Instructions', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
+cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data.columns[0], 'prep_time', 'cook_time', 'yield', 'url', 'cuisine_path', 'nutrition', 'timing', 'directions'])
+cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'total_time' : 'Total time', 'servings' : 'Servings', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
 
 # Rearrange columns
 cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
 
 <<<<<<< HEAD
+# Create list of regions
+list_region = ['European', 'Latin American', 'Asian', 'African', 'Brands', 'Middle Eastern']
+
 # Create dataframe for other categories
-list_region = ['European', 'Latin American', 'Asian', 'African', 'Brands']
 cuisine_dessert = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Desserts']
 cuisine_maindish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Main Dishes']
 cuisine_sidedish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Side Dishes']
 cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Drinks']
 cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Appetizers and Snacks']
 cuisine_region = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].isin(list_region)]
-=======
-# Use boolean mask to create new dataframe of cuisine categorized by region
-datatype = 'dict'
-mask = cleaned_recipes_data['Cuisine Category'].apply(lambda x: isinstance(x, eval(datatype)))
-cuisine_region = cleaned_recipes_data[mask]
 
-# Create dataframe for other categories, na check for NaN values
-cuisine_dessert = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Desserts', case = False, na = False)]
-cuisine_maindish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Main Dishes', case = False, na = False)]
-cuisine_sidedish = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Side Dish', case = False, na = False)]
-cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Drinks Recipes', case = False, na = False)]
-cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].str.contains('Appetizers and Snacks', case = False, na = False)]
->>>>>>> parent of 91cbd9f (change dict)
+==================================
 
 # Check for null of results
 cleaned_recipes_data.isnull().sum()
