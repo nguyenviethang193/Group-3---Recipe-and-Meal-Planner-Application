@@ -1,0 +1,7 @@
+pandas
+streamlit
+fractions
+pickle
+re
+itertools
+datetime
