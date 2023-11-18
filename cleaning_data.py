@@ -160,9 +160,6 @@ cleaned_recipes_data.isnull().sum()
 # Final result
 cleaned_recipes_data
 
-# Export to csv file
-cuisine_region.to_csv(r"d:\Hang\Cleaned Recipes Dataset.csv")
-
 #Serialize and deserialize
 with open('clean_data.pkl', 'wb') as f:
    dump(user_ingre_list, f)
