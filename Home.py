@@ -1,7 +1,6 @@
 import streamlit as st
 import deserialize as ds
 import pandas as pd
-import st_clickable_images as img
 from streamlit import session_state as ss
 from Home_def import display_fraction
 from fractions import Fraction
