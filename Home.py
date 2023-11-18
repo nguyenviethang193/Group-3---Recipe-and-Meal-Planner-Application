@@ -3,6 +3,8 @@ import deserialize as ds
 import pandas as pd
 import st_clickable_images as img
 from streamlit import session_state as ss
+from Home_def import display_fraction
+from fractions import Fraction
 
 st.set_page_config(
     page_title="Group 3",
@@ -58,9 +60,12 @@ if find:
             ss.result = ss.result.drop(labels='Cuisine')
             for i in range(len(region_choice)):
                 if region_choice[i] == True:
-                    region_set = ds.cuisine_region_list[ds.cuisine_region_list['Cuisine Category'] == {'Cuisine': region_list[i]}]
+                    region_set = ds.cuisine_region_list[ds.cuisine_region_list['Cuisine Category'] == region_list[i]]
                     new_row = pd.Series({'Dataset': region_set}, name=region_list[i])
                     ss.result = pd.concat([ss.result, new_row.to_frame().T])
+    else:
+        ss.result = pd.DataFrame({'Dataset': [ds.final_recipes_data]}, index=['default'])
+
     if len(my_ingre) != 0:
         for i in ss.result.index:
             category_ingre = ss.result.loc[i, 'Dataset'].copy()
@@ -71,21 +76,24 @@ if find:
 
 #Display left right search
 for k in range(len(ss.result)):
+    col1 = st.columns([24, 1, 1])
+    with col1[0]:
+        if ss.result.index[k] != 'default':
+            if ss.result.index[k] not in region_list:
+                st.write('/' + ss.result.index[k])
+            else:
+                st.write('/Cuisine/' + ss.result.index[k])
     if  ss.result.iloc[k]['Dataset'].empty:
         st.write('No results')
     else:
         category_set = ss.result.iloc[k]['Dataset']
-        col1 = st.columns([24, 1, 1])
-        with col1[0]:
-            if ss.result.index[k] != 'default':
-                st.write('/' + ss.result.index[k])
         with col1[1]:
             if st.button('<', key=ss.result.index[k]) and ss.num[k] >= 5:
                 ss.num[k] -= 5
         with col1[2]:
             if st.button('\>', key=ss.result.index[k]+' ') and ss.num[k] < len(category_set) - 5:
                 ss.num[k] += 5
-        st.write(ss.num[k])
+
         #Display recipes
         col2 = st.columns(5)
         if 'clicked_num' not in ss:
@@ -104,8 +112,12 @@ for k in range(len(ss.result)):
             item = category_set.iloc[ss.clicked_num]
             instruction = item['Instructions'].replace('\n', '<br>')
             ingredients = ''
+            if servings != None:
+                item_servings = servings
+            else:
+                item_servings = item['Servings']
             for j in item['Ingredients']:
-                ingredients += f'{item['Ingredients'][j]} {j}<br>'
+                ingredients += f'{display_fraction(item['Ingredients'][j]/item['Servings']*item_servings)} {j}<br>'
             for i in my_ingre:
                 ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
             col3 = st.columns(2)
@@ -115,7 +127,7 @@ for k in range(len(ss.result)):
                 with col4[0]:
                     st.write(f'**Total time:** {item['Total time']}')
                 with col4[1]:
-                    st.write(f'**Servings:** {item['Servings']}')
+                    st.write(f'**Servings:** {item_servings}')
                 st.write(f'**Nutrition:**')
                 col5 = st.columns([1, 1, 1])
                 with col5[0]:

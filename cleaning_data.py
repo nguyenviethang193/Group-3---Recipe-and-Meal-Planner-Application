@@ -143,7 +143,6 @@ cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'total_time' : 'To
 # Rearrange columns
 cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
 
-<<<<<<< HEAD
 # Create list of regions
 list_region = ['European', 'Latin American', 'Asian', 'African', 'Brands', 'Middle Eastern']
 
@@ -155,8 +154,6 @@ cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'
 cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Appetizers and Snacks']
 cuisine_region = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].isin(list_region)]
 
-==================================
-
 # Check for null of results
 cleaned_recipes_data.isnull().sum()
 
@@ -164,7 +161,7 @@ cleaned_recipes_data.isnull().sum()
 cleaned_recipes_data
 
 # Export to csv file
-cleaned_recipes_data.to_csv(r"d:\Hang\Cleaned Recipes Dataset.csv")
+cuisine_region.to_csv(r"d:\Hang\Cleaned Recipes Dataset.csv")
 
 #Serialize and deserialize
 with open('clean_data.pkl', 'wb') as f:
