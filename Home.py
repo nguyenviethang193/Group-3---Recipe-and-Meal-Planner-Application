@@ -123,20 +123,25 @@ for k in range(len(ss.result)):
                 ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
             col3 = st.columns(2)
             with col3[0]:
-                st.write(f'**Rating:** {item['Rating']}⭐')
+                item_rating = item['Rating']
+                st.write(f'**Rating:** {item_rating}⭐')
                 col4 = st.columns(2)
                 with col4[0]:
-                    st.write(f'**Total time:** {item['Total time']}')
+                    item_total_time = item['Total time']
+                    st.write(f'**Total time:** {item_total_time}')
                 with col4[1]:
                     st.write(f'**Servings:** {item_servings}')
                 st.write(f'**Nutrition:**')
                 col5 = st.columns([1, 1, 1])
                 with col5[0]:
-                    st.write(f'{item['Total Fat']}g Fat')
+                    item_total_fat = item['Total Fat']
+                    st.write(f'{item_total_fat}g Fat')
                 with col5[1]:
-                    st.write(f'{item['Total Carbohydrate']}g Carbs')
+                    item_total_carbs = item['Total Carbohydrate']
+                    st.write(f'{item_total_carbs}g Carbs')
                 with col5[2]:
-                    st.write(f'{item['Protein']}g Protein')
+                    item_pro = item['Protein']
+                    st.write(f'{item_pro}g Protein')
                 st.write(f'**Ingredients:**')
                 st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
             with col3[1]:
