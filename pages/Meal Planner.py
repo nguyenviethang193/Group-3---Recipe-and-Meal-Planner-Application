@@ -52,11 +52,14 @@ with col_display[0]:
                     st.write(j)
                     st.write('**Nutritions**')
                 with mealcol2[0]:
-                    st.write(f'{sum(recipe_list['Total Fat'])}g Fat')
+                    total_fat = recipe_list['Total Fat']
+                    st.write(f'{sum(total_fat)}g Fat')
                 with mealcol2[1]:
-                    st.write(f'{sum(recipe_list['Total Carbohydrate'])}g Carbs')
+                    total_carbs = recipe_list['Total Carbohydrate']
+                    st.write(f'{sum(total_carbs)}g Carbs')
                 with mealcol2[2]:
-                    st.write(f'{sum(recipe_list['Protein'])}g Protein')
+                    total_pro = recipe_list['Protein']
+                    st.write(f'{sum(total_pro)}g Protein')
                 with mealcol0[1]:
                     recipe_add = st.multiselect('', [i for i in ds.final_recipes_data.index if i not in recipe_list.index], 
                                  key=week+i+j+'select', placeholder='Add', label_visibility='collapsed')
@@ -77,10 +80,12 @@ with col_display[0]:
                     display_col3 = st.columns([2, 3, 12, 4])
                     item = recipe_list.iloc[m]
                     with display_col3[0]:
-                        if st.checkbox('', key=f'{recipe_list.index[m]}'+i+j+week+'checkbox', label_visibility='collapsed'):
+                        recipe_name = recipe_list.index[m]
+                        if st.checkbox('', key=f'{recipe_name}'+i+j+week+'checkbox', label_visibility='collapsed'):
                             remove_list.append(recipe_list.index[m])
                     with display_col3[1]:
-                        st.markdown(f'<img src="{item['Image link']}" height="38.4">', unsafe_allow_html=True)
+                        item_image = item['Image link']
+                        st.markdown(f'<img src="{item_image}" height="38.4">', unsafe_allow_html=True)
                         st.write('')
                     with display_col3[3]:
                         input_servings = st.number_input('', value=int(item['Input servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed', key=recipe_list.index[m]+week+i+j+'servings')
@@ -89,23 +94,30 @@ with col_display[0]:
                         if st.button(recipe_list.index[m], key=f'{recipe_list.index[m]}'+i+j+week):
                             instruction = item['Instructions'].replace('\n', '<br>')
                             ingredients = ''
-                            for j in item['Ingredients']:
-                                ingredients += f'{display_fraction(item['Ingredients'][j]/item['Servings']*input_servings)} {j}<br>'
+                            item_ingre = item['Ingredients']
+                            item_servings = item['Servings']
+                            for j in item_ingre:
+                                ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
                             with col_display[1]:
-                                st.write(f'**Rating:** {item['Rating']}⭐')
+                                item_rating = item['Rating']
+                                st.write(f'**Rating:** {item_rating}⭐')
                                 col4 = st.columns(2)
                                 with col4[0]:
-                                    st.write(f'**Total time:** {item['Total time']}')
+                                    item_total_time = item['Total time']
+                                    st.write(f'**Total time:** {item_total_time}')
                                 with col4[1]:
                                     st.write(f'**Servings:** {input_servings}')
                                 st.write(f'**Nutrition:**')
                                 col5 = st.columns([1, 1, 1])
                                 with col5[0]:
-                                    st.write(f'{item['Total Fat']}g Fat')
+                                    item_fat = item['Total Fat']
+                                    st.write(f'{item_fat}g Fat')
                                 with col5[1]:
-                                    st.write(f'{item['Total Carbohydrate']}g Carbs')
+                                    item_carbs = item['Total Carbohydrate']
+                                    st.write(f'{item_carbs}g Carbs')
                                 with col5[2]:
-                                    st.write(f'{item['Protein']}g Protein')
+                                    item_pro = item['Protein']
+                                    st.write(f'{item_pro}g Protein')
                                 st.write(f'**Ingredients:**')
                                 st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
                                 st.write('**Instruction:**')
