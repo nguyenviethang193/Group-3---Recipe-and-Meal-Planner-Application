@@ -8,7 +8,7 @@ from Home_def import display_fraction
 st.set_page_config(layout='wide')
 st.header('Weekly Meal Plan')
 row_name = ['Breakfast', 'Lunch', 'Dinner', 'Snack']
-column_name = ['Monday', 'Tueday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+column_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 data = [(pd.DataFrame(columns=ds.final_recipes_data.columns) for i in range(7)) for j in range(4)]
 empty_dataset = pd.DataFrame(data, index=row_name, columns=column_name)
@@ -91,13 +91,16 @@ with col_display[0]:
                         input_servings = st.number_input('', value=int(item['Input servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed', key=recipe_list.index[m]+week+i+j+'servings')
                         servings_change.append(input_servings)
                     with display_col3[2]:
-                        if st.button(recipe_list.index[m], key=f'{recipe_list.index[m]}'+i+j+week):
+                        if st.button(recipe_list.index[m], key=f'{recipe_name}'+i+j+week):
                             instruction = item['Instructions'].replace('\n', '<br>')
                             ingredients = ''
                             item_ingre = item['Ingredients']
                             item_servings = item['Servings']
                             for j in item_ingre:
-                                ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
+                                if item_ingre[j] != 0:
+                                    ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
+                                else:
+                                    ingredients += f'{j}<br>'
                             with col_display[1]:
                                 item_rating = item['Rating']
                                 st.write(f'**Rating:** {item_rating}⭐')

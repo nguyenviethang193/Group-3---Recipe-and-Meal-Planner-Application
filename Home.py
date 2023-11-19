@@ -118,7 +118,10 @@ for k in range(len(ss.result)):
             item_ingre = item['Ingredients']
             item_original_servings = item['Servings']
             for j in item_ingre:
-                ingredients += f'{display_fraction(item_ingre[j]/item_original_servings*item_servings)} {j}<br>'
+                if item_ingre[j] != 0:
+                    ingredients += f'{display_fraction(item_ingre[j]/item_original_servings*item_servings)} {j}<br>'
+                else:
+                    ingredients += f'{j}<br>'
             for i in my_ingre:
                 ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
             col3 = st.columns(2)

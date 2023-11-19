@@ -99,7 +99,10 @@ with display_col2[0]:
                 item_ingre = item['Ingredients']
                 item_servings = item['Servings']
                 for j in item_ingre:
-                    ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
+                    if item_ingre[j] != 0:
+                        ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
+                    else:
+                        ingredients += f'{j}<br>'
                 with display_col2[1]:
                     item_rating = item['Rating']
                     st.write(f'**Rating:** {item_rating}⭐')
