@@ -12,7 +12,8 @@ st.set_page_config(
 
 #Heading and description
 st.markdown("<h1 style='text-align: center;'>Recipe and Meal Planner App</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Write your app description here</p>", unsafe_allow_html=True)
+st.markdown("""<p style='text-align: center;'>The Recipe and Meal Planner App is the perfect companion for dedicated chefs and cooking enthusiasts. 
+            With a user-friendly <br>interface and diverse features, this app helps you organize and enjoy your cooking experience efficiently and creatively.</p>""", unsafe_allow_html=True)
 
 #Search bar
 display_col = st.columns([10, 1, 1])
@@ -103,51 +104,51 @@ for k in range(len(ss.result)):
             var = len(category_set) - ss.num[k]
         for i in range(var):
             with col2[i]:
-                st.image(category_set.iloc[ss.num[k] + i, -1])
+                st.image(category_set.iloc[ss.num[k] + i]['Image link'])
                 if st.button(category_set.index[ss.num[k] + i]):
                     ss.clicked_num = ss.num[k] + i
 
-        if ss.clicked_num != -1:
-            item = category_set.iloc[ss.clicked_num]
-            instruction = item['Instructions'].replace('\n', '<br>')
-            ingredients = ''
-            if servings != None:
-                item_servings = servings
-            else:
-                item_servings = item['Servings']
-            item_ingre = item['Ingredients']
-            item_original_servings = item['Servings']
-            for j in item_ingre:
-                if item_ingre[j] != 0:
-                    ingredients += f'{display_fraction(item_ingre[j]/item_original_servings*item_servings)} {j}<br>'
+            if ss.clicked_num != -1:
+                item = category_set.iloc[ss.clicked_num]
+                instruction = item['Instructions'].replace('\n', '<br>')
+                ingredients = ''
+                if servings != None:
+                    item_servings = servings
                 else:
-                    ingredients += f'{j}<br>'
-            for i in my_ingre:
-                ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
-            col3 = st.columns(2)
-            with col3[0]:
-                item_rating = item['Rating']
-                st.write(f'**Rating:** {item_rating}⭐')
-                col4 = st.columns(2)
-                with col4[0]:
-                    item_total_time = item['Total time']
-                    st.write(f'**Total time:** {item_total_time}')
-                with col4[1]:
-                    st.write(f'**Servings:** {item_servings}')
-                st.write(f'**Nutrition:**')
-                col5 = st.columns([1, 1, 1])
-                with col5[0]:
-                    item_total_fat = item['Total Fat']
-                    st.write(f'{item_total_fat}g Fat')
-                with col5[1]:
-                    item_total_carbs = item['Total Carbohydrate']
-                    st.write(f'{item_total_carbs}g Carbs')
-                with col5[2]:
-                    item_pro = item['Protein']
-                    st.write(f'{item_pro}g Protein')
-                st.write(f'**Ingredients:**')
-                st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
-            with col3[1]:
-                st.write('**Instruction:**')
-                st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
-            ss.clicked_num = -1
+                    item_servings = item['Servings']
+                item_ingre = item['Ingredients']
+                item_original_servings = item['Servings']
+                for j in item_ingre:
+                    if item_ingre[j] != 0:
+                        ingredients += f'{display_fraction(item_ingre[j]/item_original_servings*item_servings)} {j}<br>'
+                    else:
+                        ingredients += f'{j}<br>'
+                for i in my_ingre:
+                    ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
+                col3 = st.columns(2)
+                with col3[0]:
+                    item_rating = item['Rating']
+                    st.write(f'**Rating:** {item_rating}⭐')
+                    col4 = st.columns(2)
+                    with col4[0]:
+                        item_total_time = item['Total time']
+                        st.write(f'**Total time:** {item_total_time}')
+                    with col4[1]:
+                        st.write(f'**Servings:** {item_servings}')
+                    st.write(f'**Nutrition:**')
+                    col5 = st.columns([1, 1, 1])
+                    with col5[0]:
+                        item_total_fat = item['Total Fat']
+                        st.write(f'{item_total_fat}g Fat')
+                    with col5[1]:
+                        item_total_carbs = item['Total Carbohydrate']
+                        st.write(f'{item_total_carbs}g Carbs')
+                    with col5[2]:
+                        item_pro = item['Protein']
+                        st.write(f'{item_pro}g Protein')
+                    st.write(f'**Ingredients:**')
+                    st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
+                with col3[1]:
+                    st.write('**Instruction:**')
+                    st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+                ss.clicked_num = -1

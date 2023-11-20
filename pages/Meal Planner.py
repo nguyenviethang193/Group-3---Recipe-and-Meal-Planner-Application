@@ -7,9 +7,9 @@ from Home_def import display_fraction
 
 st.set_page_config(layout='wide')
 st.header('Weekly Meal Plan')
+
 row_name = ['Breakfast', 'Lunch', 'Dinner', 'Snack']
 column_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
 data = [(pd.DataFrame(columns=ds.final_recipes_data.columns) for i in range(7)) for j in range(4)]
 empty_dataset = pd.DataFrame(data, index=row_name, columns=column_name)
 
@@ -37,6 +37,7 @@ with col_display2[1]:
         ss.week_list = pd.concat([new_week, ss.week_list])
 with col_display2[0]:
     week = st.selectbox('Choose a week', options=ss.week_list.index)
+
 #Weekdays
 with col_display[0]:
     current_week = ss.week_list[week]
@@ -48,6 +49,8 @@ with col_display[0]:
                 mealcol2 = st.columns(3)
                 mealcol1 = st.columns([6, 1])
                 col6 = st.columns([9, 1])
+
+                #Display nutrition for each meal
                 with mealcol0[0]:
                     st.write(j)
                     st.write('**Nutritions**')
@@ -60,14 +63,14 @@ with col_display[0]:
                 with mealcol2[2]:
                     total_pro = recipe_list['Protein']
                     st.write(f'{sum(total_pro)}g Protein')
+
+                #Add recipes
                 with mealcol0[1]:
-                    recipe_add = st.multiselect('', [i for i in ds.final_recipes_data.index if i not in recipe_list.index], 
-                                 key=week+i+j+'select', placeholder='Add', label_visibility='collapsed')
+                    recipe_add = st.multiselect(week+i+j+'select', [i for i in ds.final_recipes_data.index if i not in recipe_list.index], placeholder='Add', label_visibility='collapsed')
                 with mealcol0[2]:
                     button = st.button('OK', key=week+i+j+'add')
                 if button:
                     add_list = ds.final_recipes_data.loc[recipe_add, :]
-                    add_list['Input servings'] = add_list['Servings'].copy()
                     with col6[0]:
                         st.success('Recipes added successfully')
                     with col6[1]:
@@ -76,19 +79,21 @@ with col_display[0]:
 
                 remove_list = []
                 servings_change = []
+
+                #Display recipes
                 for m in range(len(recipe_list)):
                     display_col3 = st.columns([2, 3, 12, 4])
                     item = recipe_list.iloc[m]
                     with display_col3[0]:
                         recipe_name = recipe_list.index[m]
-                        if st.checkbox('', key=f'{recipe_name}'+i+j+week+'checkbox', label_visibility='collapsed'):
+                        if st.checkbox(f'{recipe_name}'+i+j+week+'checkbox', label_visibility='collapsed'):
                             remove_list.append(recipe_list.index[m])
                     with display_col3[1]:
                         item_image = item['Image link']
                         st.markdown(f'<img src="{item_image}" height="38.4">', unsafe_allow_html=True)
                         st.write('')
                     with display_col3[3]:
-                        input_servings = st.number_input('', value=int(item['Input servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed', key=recipe_list.index[m]+week+i+j+'servings')
+                        input_servings = st.number_input(recipe_list.index[m]+week+i+j+'servings', value=int(item['Input Servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed')
                         servings_change.append(input_servings)
                     with display_col3[2]:
                         if st.button(recipe_list.index[m], key=f'{recipe_name}'+i+j+week):
@@ -125,8 +130,10 @@ with col_display[0]:
                                 st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
                                 st.write('**Instruction:**')
                                 st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
-                recipe_list['Input servings'] = servings_change
+                recipe_list['Input Servings'] = servings_change
                 ss.week_list[week].at[j, i] = recipe_list
+
+                #Remove recipes
                 if len(remove_list) != 0: 
                     if mealcol1[1].button('Remove', key=week+i+j):
                         ss.week_list[week].at[j, i] = recipe_list.drop(remove_list)

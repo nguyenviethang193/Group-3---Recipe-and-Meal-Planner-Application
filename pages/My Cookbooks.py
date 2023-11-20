@@ -8,6 +8,8 @@ st.set_page_config(layout='wide')
 st.header('My Cookbooks')
 
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
+
+#Session state
 if 'mycookbook' not in ss:
     favourite = empty_cookbook
     mydata = {'Description': [None], 'Recipe list': [favourite]}
@@ -15,13 +17,15 @@ if 'mycookbook' not in ss:
 if 'add' not in ss:
     ss.add = 1
 
+#Search bar
 display_col0 = st.columns(2)
 with display_col0[0]:
     col10 = st.columns([10, 1])
     with col10[0]:
-        cookbook = st.selectbox('', ss.mycookbook.index.tolist()[::-1], 
+        cookbook = st.selectbox('Find cookbook', ss.mycookbook.index.tolist()[::-1], 
                                 placeholder = 'Choose your cookbooks', label_visibility='collapsed')
-
+    
+    #Create a new cookbook
     with col10[1]:
         if st.button('\+'):
             ss.add += 1
@@ -33,10 +37,9 @@ with display_col0[0]:
                 recipe = st.multiselect('Choose your recipes (Optional)', ds.final_recipes_data.index)
                 if st.button('Create'):
                     if title == '':
-                        st.error('You haven\'t input title')
+                        st.error('You haven\'t entered title')
                     else: 
                         new_cookbook_recipe = ds.final_recipes_data.loc[recipe, :].copy()
-                        new_cookbook_recipe['Input servings'] = new_cookbook_recipe['Servings'].copy()
                         new_cookbook = {'Description': description, 'Recipe list': new_cookbook_recipe}
                         ss.mycookbook.loc[title] = new_cookbook
                         ss.add += 1
@@ -46,7 +49,7 @@ with display_col0[0]:
                         with display_col1[1]:
                             st.button('Close')
 
-
+#Display cookbook
 current = ss.mycookbook.loc[cookbook]
 st.write('**Description:**')
 if current['Description'] != None:
@@ -61,19 +64,20 @@ with display_col2[0]:
     col8 = st.columns([5, 1])
     col6 = st.columns([9, 1])
 
+    #Add recipes
     with col7[1]:
-            recipe_add = st.multiselect('',[i for i in ds.final_recipes_data.index if i not in recipe_list.index], 
+            recipe_add = st.multiselect('Add recipes',[i for i in ds.final_recipes_data.index if i not in recipe_list.index], 
                                         placeholder='Add recipes', label_visibility='collapsed')
     with col7[2]:
         if st.button('OK', key='addbutton'):
             add_list = ds.final_recipes_data.loc[recipe_add, :]
-            add_list['Input servings'] = add_list['Servings'].copy()
             recipe_list = pd.concat([recipe_list, add_list], ignore_index=False)
             with col6[0]:
                 st.success('Recipes added successfully')
             with col6[1]:
                 st.button('OK')
 
+    #Display recipes
     with col7[0]:
         st.write('**Recipe list:**')
     remove_list = []
@@ -90,7 +94,7 @@ with display_col2[0]:
             st.markdown(f'<img src="{item_image}" height="38.4">', unsafe_allow_html=True)
             st.write('')
         with display_col3[3]:
-            input_servings = st.number_input('', value=int(item['Input servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed', key=recipe_list.index[m]+'servings')
+            input_servings = st.number_input(recipe_list.index[m]+'servings', value=int(item['Input Servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed')
             servings_change.append(input_servings)
         with display_col3[2]:
             if st.button(recipe_list.index[m]):
@@ -127,8 +131,10 @@ with display_col2[0]:
                     st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
                     st.write('**Instruction:**')
                     st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
-    recipe_list['Input servings'] = servings_change
+    recipe_list['Input Servings'] = servings_change
     ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list
+
+    #Remove recipes
     if len(remove_list) != 0: 
         if col8[1].button('Remove'):
             ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list.drop(remove_list)
@@ -136,7 +142,7 @@ with display_col2[0]:
                 st.success('Recipes removed successfully')
             with col6[1]:
                 st.button('OK')
-
+#Remove cookbook
 with display_col0[0]:
     if cookbook != 'My Favourite':
         if st.button(':red[Remove cookbook]'):

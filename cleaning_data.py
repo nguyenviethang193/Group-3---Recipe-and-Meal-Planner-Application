@@ -59,6 +59,7 @@ cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Fruits an
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Soup Recipes|Soups, Stews and Chili Recipes|Sauces and Condiments|Bread|Quick Bread Recipes|Quick Side Dish Recipes","Side Dish", regex=True)
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Salad","Appetizers and Snacks")
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Seafood|Meat and Poultry|BBQ & Grilling|Everyday Cooking|Holidays and Events Recipes|Breakfast and Brunch","Main Dishes", regex=True)
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace('Side Dish', 'Side Dishes')
 
 # Convert cuisine of particular country/continents/brands into dict
 for i in range(len(cuisine)):
@@ -91,20 +92,7 @@ directions.rename(columns = {directions.columns[0] : 'Instructions'}, inplace = 
 # Create an ingredient list for users to search
 ingre_list = ingre_list.str.replace(r'[\[\]\'"]', '', regex = True).str.split(', ')
 user_ingre_list = list(set(chain.from_iterable(ingre_list)))
-
-# Replace plural units with singular form
 recipes['ingredients'] = recipes['ingredients'].str.replace(r' \(.+?\)', '', regex=True).str.replace(r'\s+', ' ', regex=True).str.strip()
-es_list = ['pinches', 'pouches', 'dashes', 'peaches', 'tomatoes', 'bunches', 'mangoes']
-exception = ['skinless', 'boneless', 'leaves', 'seedless', 'strawberries']
-def remove_word_tail(s):
-  for i in es_list:
-    s = s.replace(i, i[:-2])
-  lst = re.findall(r'(?<=[\d½¾¼⅔⅓⅞⅝⅛⅜] )[^\d½¾¼⅔⅓⅞⅝⅛⅜\s]+s\b', s)
-  lst = [i for i in lst if i not in exception]
-  for i in lst:
-    s = s.replace(i, i[:-1])
-  return s
-recipes['ingredients'] = recipes['ingredients'].apply(remove_word_tail)
 user_ingre_list = [i for i in user_ingre_list if any(i in j for j in recipes['ingredients'])]
 recipes['ingredients'] = recipes['ingredients'].str.split(r', (?=[\d½¾¼⅔⅓⅞⅝⅛⅜])', regex = True)
 
@@ -134,7 +122,7 @@ recipes['ingredients'] = recipes['ingredients'].apply(lambda x: {i[1]: i[0] for 
 cleaned_recipes_data = pd.concat([recipes, directions, cuisine, nutritions], axis = 1)
 
 # Create input servings columns
-cleaned_recipes_data['Input Servings'] = cleaned_recipes_data['Servings']
+cleaned_recipes_data['Input Servings'] = cleaned_recipes_data['servings'].copy()
 
 # Replace null values in total time column
 cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("Unkown")
@@ -144,7 +132,7 @@ cleaned_recipes_data = cleaned_recipes_data.drop(columns = [cleaned_recipes_data
 cleaned_recipes_data = cleaned_recipes_data.rename(columns = {'total_time' : 'Total time', 'servings' : 'Servings', 'ingredients' : 'Ingredients', 'rating' : 'Rating', 'img_src' : 'Image link'})
 
 # Rearrange columns
-cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link']]
+cleaned_recipes_data = cleaned_recipes_data[['Cuisine Category', 'Total Fat', 'Total Carbohydrate', 'Protein', 'Ingredients', 'Instructions', 'Total time', 'Servings', 'Rating', 'Image link', 'Input Servings']]
 
 # Create list of regions
 list_region = ['European', 'Latin American', 'Asian', 'African', 'Brands', 'Middle Eastern']
