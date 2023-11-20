@@ -133,6 +133,9 @@ recipes['ingredients'] = recipes['ingredients'].apply(lambda x: {i[1]: i[0] for 
 # Combine dataframes horizontally
 cleaned_recipes_data = pd.concat([recipes, directions, cuisine, nutritions], axis = 1)
 
+# Create input servings columns
+cleaned_recipes_data['Input Servings'] = cleaned_recipes_data['Servings']
+
 # Replace null values in total time column
 cleaned_recipes_data["total_time"] = cleaned_recipes_data["total_time"].fillna("Unkown")
 
