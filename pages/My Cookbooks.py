@@ -5,7 +5,12 @@ import deserialize as ds
 from  Home_def import display_fraction
 
 st.set_page_config(layout='wide')
-st.header('My Cookbooks')
+headercol = st.columns([1, 7])
+with headercol[0]:
+    st.markdown(f'<img src="https://media.giphy.com/media/igVCthAMg37D7FMFrm/giphy.gif" width="130">', unsafe_allow_html=True)
+with headercol[1]:
+    st.write('')
+    st.header('My Cookbooks')
 
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
 

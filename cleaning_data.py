@@ -60,6 +60,7 @@ cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Soup Rec
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace("Salad","Appetizers and Snacks")
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace(r"Seafood|Meat and Poultry|BBQ & Grilling|Everyday Cooking|Holidays and Events Recipes|Breakfast and Brunch","Main Dishes", regex=True)
 cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace('Side Dish', 'Side Dishes')
+cuisine["Cuisine Category"] = cuisine["Cuisine Category"].str.replace('Drinks Recipes', 'Drinks')
 
 # Convert cuisine of particular country/continents/brands into dict
 for i in range(len(cuisine)):

@@ -6,7 +6,12 @@ from datetime import datetime,  timedelta
 from Home_def import display_fraction
 
 st.set_page_config(layout='wide')
-st.header('Weekly Meal Plan')
+headercol = st.columns([1, 7])
+with headercol[0]:
+    st.markdown(f'<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWg0NnZ1Z3U3OW43c3A0dm42ZHNmZnc4N2swcWFlZmNtZXNpbjB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/CkISXfgTSLTmZUOwJE/giphy.gif" width="130">', unsafe_allow_html=True)
+with headercol[1]:
+    st.write('')
+    st.header('Weekly Meal Plan')
 
 row_name = ['Breakfast', 'Lunch', 'Dinner', 'Snack']
 column_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
