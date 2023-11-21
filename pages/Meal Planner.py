@@ -22,6 +22,8 @@ if 'week_list'not in ss:
     ss.monday = today - timedelta(days=today.weekday()) # 0 represents Monday
     ss.sunday = ss.monday + timedelta(days=6)
     ss.week_list = pd.Series([empty_dataset], index=[f'{date_form(ss.monday)} - {date_form(ss.sunday)}'])
+if 'recipe_button' not in ss:
+    ss.recipe_button = -1
 
 col_display2 = st.columns([15, 1, 11])
 col_display = st.columns([3, 2])
@@ -97,41 +99,46 @@ with col_display[0]:
                         servings_change.append(input_servings)
                     with display_col3[2]:
                         if st.button(recipe_list.index[m], key=f'{recipe_name}'+i+j+week):
-                            instruction = item['Instructions'].replace('\n', '<br>')
-                            ingredients = ''
-                            item_ingre = item['Ingredients']
-                            item_servings = item['Servings']
-                            for j in item_ingre:
-                                if item_ingre[j] != 0:
-                                    ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
-                                else:
-                                    ingredients += f'{j}<br>'
-                            with col_display[1]:
-                                item_rating = item['Rating']
-                                st.write(f'**Rating:** {item_rating}⭐')
-                                col4 = st.columns(2)
-                                with col4[0]:
-                                    item_total_time = item['Total time']
-                                    st.write(f'**Total time:** {item_total_time}')
-                                with col4[1]:
-                                    st.write(f'**Servings:** {input_servings}')
-                                st.write(f'**Nutrition:**')
-                                col5 = st.columns([1, 1, 1])
-                                with col5[0]:
-                                    item_fat = item['Total Fat']
-                                    st.write(f'{item_fat}g Fat')
-                                with col5[1]:
-                                    item_carbs = item['Total Carbohydrate']
-                                    st.write(f'{item_carbs}g Carbs')
-                                with col5[2]:
-                                    item_pro = item['Protein']
-                                    st.write(f'{item_pro}g Protein')
-                                st.write(f'**Ingredients:**')
-                                st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
-                                st.write('**Instruction:**')
-                                st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+                            ss.recipe_button = recipe_list.index[m]
                 recipe_list['Input Servings'] = servings_change
                 ss.week_list[week].at[j, i] = recipe_list
+                if ss.recipe_button != -1:
+                    item =  recipe_list.loc[ss.recipe_button]
+                    instruction = item['Instructions'].replace('\n', '<br>')
+                    ingredients = ''
+                    item_ingre = item['Ingredients']
+                    item_servings = item['Servings']
+                    item_input_servings = item['Input Servings']
+                    for j in item_ingre:
+                        if item_ingre[j] != 0:
+                            ingredients += f'{display_fraction(item_ingre[j]/item_servings*item_input_servings)} {j}<br>'
+                        else:
+                            ingredients += f'{j}<br>'
+                    with col_display[1]:
+                        item_rating = item['Rating']
+                        st.write(f'**Rating:** {item_rating}⭐')
+                        col4 = st.columns(2)
+                        with col4[0]:
+                            item_total_time = item['Total time']
+                            st.write(f'**Total time:** {item_total_time}')
+                        with col4[1]:
+                            st.write(f'**Servings:** {item_input_servings}')
+                        st.write(f'**Nutrition:**')
+                        col5 = st.columns([1, 1, 1])
+                        with col5[0]:
+                            item_fat = item['Total Fat']
+                            st.write(f'{item_fat}g Fat')
+                        with col5[1]:
+                            item_carbs = item['Total Carbohydrate']
+                            st.write(f'{item_carbs}g Carbs')
+                        with col5[2]:
+                            item_pro = item['Protein']
+                            st.write(f'{item_pro}g Protein')
+                        st.write(f'**Ingredients:**')
+                        st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
+                        st.write('**Instruction:**')
+                        st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+                        ss.recipe_button =  -1
 
                 #Remove recipes
                 if len(remove_list) != 0: 
