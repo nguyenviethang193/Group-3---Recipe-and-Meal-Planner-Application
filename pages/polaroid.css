@@ -4,17 +4,17 @@
 
 @font-face{
   font-family: 'Brittany';
-  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf");
+  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf") format("ttf");
 }
 
 @font-face{
   font-family: 'Bebas Neue';
-  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf");
+  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf") format("ttf");
 }
 
 @font-face {
   font-family: 'Satisfy';
-  src: url("https://https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf");
+  src: url("https://https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf") format("ttf");
 }
 
 body{
@@ -33,13 +33,13 @@ body{
   text-align: center;
   margin-top: 2rem; 
   font-family: 'Satisfy', serif;
-  font-size: 8rem;
+  font-size: 3rem;
   color: #333; 
   font-weight: 100;
 }
 
 h1 {
-  font-size: 10rem;
+  font-size: 5rem;
   text-align: center;
   margin-bottom: 0;
   color: orange; 
@@ -47,7 +47,7 @@ h1 {
 }
 
 h2 {
-  font-size: 15rem;
+  font-size: 10rem;
   text-align: center;
   margin-top: 20px;
   color: #595858; 
