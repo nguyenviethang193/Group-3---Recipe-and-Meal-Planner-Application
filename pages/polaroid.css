@@ -4,17 +4,17 @@
 
 @font-face{
   font-family: 'Brittany';
-  src: url(Introduction/font/BrittanySignature.ttf);
+  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf");
 }
 
 @font-face{
   font-family: 'Bebas Neue';
-  src: url(Introduction/font/BebasNeue-Regular.ttf);
+  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf");
 }
 
 @font-face {
   font-family: 'Satisfy';
-  src: url(Introduction/font/Satisfy-Regular.ttf);
+  src: url("https://https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf");
 }
 
 body{
