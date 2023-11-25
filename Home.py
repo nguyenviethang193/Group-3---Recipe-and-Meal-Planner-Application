@@ -31,10 +31,17 @@ with display_col[2]:
     find = st.button(':mag_right:')
 
 #Category checkbox
+empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
+if 'mycookbook' not in ss:
+    favourite = empty_cookbook
+    mydata = {'Description': [None], 'Recipe list': [favourite]}
+    ss.mycookbook = pd.DataFrame(mydata, index=['My Favourite'])
 if 'num' not in ss:
         ss.num = [0]
 if 'result' not in ss:
     ss.result = pd.DataFrame({'Dataset': [ds.final_recipes_data]}, index=['default'])
+if 'add_button' not in ss:
+    ss.add_button = [[1 for i in range(len(ss.result.iloc[j]['Dataset']))] for j in range(len(ss.result))]
 
 category_list = ['Cuisine', 'Appetizers and Snacks', 'Main Dishes', 'Side Dishes', 'Desserts', 'Drinks']
 dataset = [ds.cuisine_region_list, ds.appetizer_snack_list, ds.maindish_list, ds.sidedish_list, ds.dessert_list, ds.drink_list]
@@ -73,6 +80,7 @@ if find:
             category_ingre = category_ingre[mask]
             ss.result.at[i, 'Dataset'] = category_ingre
     ss.num = [0 for i in range(len(ss.result))]
+    ss.add_button = [[1 for i in range(len(ss.result.iloc[j]['Dataset']))] for j in range(len(ss.result))]
 
 #Display left right search
 for k in range(len(ss.result)):
@@ -103,10 +111,51 @@ for k in range(len(ss.result)):
         if ss.num[k] >= len(category_set) - 5:
             var = len(category_set) - ss.num[k]
         for i in range(var):
+            item = category_set.iloc[ss.num[k] + i]
+            item_name = category_set.index[ss.num[k] + i]
             with col2[i]:
                 st.image(category_set.iloc[ss.num[k] + i]['Image link'])
-                if st.button(category_set.index[ss.num[k] + i]):
-                    ss.clicked_num = ss.num[k] + i
+                addcol = st.columns([9, 2])
+                with addcol[0]:
+                    if st.button(category_set.index[ss.num[k] + i]):
+                        ss.clicked_num = ss.num[k] + i
+                with addcol[1]:
+                    if st.button('\+', key='+' + category_set.index[ss.num[k] + i]):
+                        ss.add_button[k][i] += 1
+                if ss.add_button[k][i] % 2 == 0:
+                    existed_cookbook = [i for i in ss.mycookbook.index if item_name not in ss.mycookbook.loc[i, 'Recipe list'].index]
+                    cookbookchoice = existed_cookbook[::-1] + ['New']
+                    cookbook = st.selectbox('Choose a cookbook', cookbookchoice, key=item_name+'select')
+                    recipe_add = category_set.iloc[[ss.num[k]+i], :]
+                    if cookbook == 'New':
+                        title = st.text_input('Title *')
+                        description = st.text_input('Description')
+                        if st.button('Add', key=item_name+'addnew'):
+                            if title == '':
+                                st.error('You haven\'t entered title')
+                            elif title in ss.mycookbook.index:
+                                st.error('Title existed!')
+                            else:
+                                new_cookbook = {'Description': description, 'Recipe list': recipe_add}
+                                ss.mycookbook.loc[title] = new_cookbook
+                                newcol1 = st.columns([5, 2])
+                                with newcol1[0]:
+                                    st.success('Recipe added successfully')
+                                with newcol1[1]:
+                                    st.button('OK')
+                                ss.add_button[k][i] += 1
+                                
+                    else:
+                        if st.button('Add', key=item_name+'add'):
+                            recipe_list = ss.mycookbook.loc[cookbook, 'Recipe list']
+                            recipe_list = pd.concat([recipe_list, recipe_add], ignore_index=False)
+                            ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list
+                            newcol1 = st.columns([5, 2])
+                            with newcol1[0]:
+                                st.success('Recipe added successfully')
+                            with newcol1[1]:
+                                st.button('OK')
+                            ss.add_button[k][i] += 1
 
             if ss.clicked_num != -1:
                 item = category_set.iloc[ss.clicked_num]
