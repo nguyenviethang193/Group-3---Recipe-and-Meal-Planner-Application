@@ -128,8 +128,8 @@ for k in range(len(ss.result)):
                     cookbook = st.selectbox('Choose a cookbook', cookbookchoice, key=item_name+'select')
                     recipe_add = category_set.iloc[[ss.num[k]+i], :]
                     if cookbook == 'New':
-                        title = st.text_input('Title *')
-                        description = st.text_input('Description')
+                        title = st.text_input('Title *', key='title' + item_name)
+                        description = st.text_input('Description', key='description' + item_name)
                         if st.button('Add', key=item_name+'addnew'):
                             if title == '':
                                 st.error('You haven\'t entered title')
