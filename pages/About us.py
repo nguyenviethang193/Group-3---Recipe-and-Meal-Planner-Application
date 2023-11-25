@@ -15,21 +15,21 @@ def main():
 
     @font-face{
       font-family: 'Brittany';
-      src: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf");
+      src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf");
     }
 
     @font-face{
       font-family: 'Bebas Neue';
-      src: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf");
+      src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf");
     }
 
     @font-face {
       font-family: 'Satisfy';
-      src: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf");
+      src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf");
     }
 
     body{
-      background-image: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/background.jpg");
+      background-image: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/background.jpg");
     }
 
     .wrapper {
