@@ -17,14 +17,14 @@ body{
 .quote{
   text-align: center;
   margin-top: 2rem; 
-  font-size: 10rem;
+  font-size: 4rem;
   color: #333; 
   font-weight: 100;
   font-family: 'Brush Script MT';
 }
 
 h1 {
-  font-size: 10rem;
+  font-size: 5rem;
   text-align: center;
   margin-bottom: 0;
   color: orange; 
@@ -33,7 +33,7 @@ h1 {
 }
 
 h2 {
-  font-size: 15rem;
+  font-size: 7rem;
   text-align: center;
   margin-top: 40px;
   color: #595858; 
@@ -42,7 +42,7 @@ h2 {
 
 .polaroid{
   background: white;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 0.2rem 1.2rem rgba(0,0,0,0.2);
 }
 
@@ -53,7 +53,7 @@ h2 {
 
 .caption{
   font-family: 'Brush Script MT';
-  font-size: 8rem;
+  font-size: 3rem;
   text-align: center;
   line-height: 2em;
 }
