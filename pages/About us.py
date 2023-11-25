@@ -15,21 +15,21 @@ def main():
 
     @font-face{
       font-family: 'Brittany';
-      src: url(https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf);
+      src: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf");
     }
 
     @font-face{
       font-family: 'Bebas Neue';
-      src: url(https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf);
+      src: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf");
     }
 
     @font-face {
       font-family: 'Satisfy';
-      src: url(https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf);
+      src: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf");
     }
 
     body{
-      background-image: url(https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/background.jpg);
+      background-image: url("https://rawgit.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/background.jpg");
     }
 
     .wrapper {
@@ -187,28 +187,28 @@ def main():
   <div class="wrapper">
     <div class="item">
       <div class="polaroid">
-        <img src="https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hang.jpg" alt="">
+        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hang.jpg" alt="">
         <div class="caption">Nguyen Viet Hang</div>
       </div>
     </div>
 
     <div class="item">
       <div class="polaroid">
-        <img src="https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/danh.JPG" alt="">
+        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/danh.JPG" alt="">
         <div class="caption">Tran Duy Anh</div>
       </div>
     </div>
 
     <div class="item">
       <div class="polaroid">
-        <img src="https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/dung.JPG" alt="">
+        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/dung.JPG" alt="">
         <div class="caption">Nguyen Manh Dung</div>
       </div>
     </div>
 
     <div class="item">
       <div class="polaroid">
-        <img src="https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hieu.jpg" alt="">
+        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hieu.jpg" alt="">
         <div class="caption">Nguyen Minh Hieu</div>
       </div>
     </div>
