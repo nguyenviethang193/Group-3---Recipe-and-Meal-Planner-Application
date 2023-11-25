@@ -2,19 +2,19 @@ import streamlit as st
 import base64
 
 def main():
-    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hang.jpg", "rb") as hang:
+    with open("https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hang.jpg", "rb") as hang:
         hang_image_bytes = hang.read()
     hang_encoded_image = base64.b64encode(hang_image_bytes).decode()
 
-    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/danh.JPG", "rb") as danh:
+    with open("https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/danh.JPG", "rb") as danh:
         danh_image_bytes = danh.read()
     danh_encoded_image = base64.b64encode(danh_image_bytes).decode()
 
-    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/dung.JPG", "rb") as dung:
+    with open("https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/dung.JPG", "rb") as dung:
         dung_image_bytes = dung.read()
     dung_encoded_image = base64.b64encode(dung_image_bytes).decode()
 
-    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hieu.jpg", "rb") as hieu:
+    with open("https://github.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hieu.jpg", "rb") as hieu:
         hieu_image_bytes = hieu.read()
     hieu_encoded_image = base64.b64encode(hieu_image_bytes).decode()
  
