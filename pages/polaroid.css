@@ -4,21 +4,21 @@
 
 @font-face{
   font-family: 'Brittany';
-  src: url(font/BrittanySignature.ttf);
+  src: url(Introduction/font/BrittanySignature.ttf);
 }
 
 @font-face{
   font-family: 'Bebas Neue';
-  src: url(font/BebasNeue-Regular.ttf);
+  src: url(Introduction/font/BebasNeue-Regular.ttf);
 }
 
 @font-face {
   font-family: 'Satisfy';
-  src: url(font/Satisfy-Regular.ttf);
+  src: url(Introduction/font/Satisfy-Regular.ttf);
 }
 
 body{
-  background-image: url(resources/images/background.jpg);
+  background-image: url(Introduction/resources/images/background.jpg);
 }
 
 .wrapper {
