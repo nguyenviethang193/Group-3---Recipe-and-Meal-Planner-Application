@@ -1,6 +1,23 @@
 import streamlit as st
+import base64
 
 def main():
+    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hang.jpg", "rb") as hang:
+        hang_image_bytes = hang.read()
+    hang_encoded_image = base64.b64encode(hang_image_bytes).decode()
+
+    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/danh.JPG", "rb") as danh:
+        danh_image_bytes = danh.read()
+    danh_encoded_image = base64.b64encode(danh_image_bytes).decode()
+
+    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/dung.JPG", "rb") as dung:
+        dung_image_bytes = dung.read()
+    dung_encoded_image = base64.b64encode(dung_image_bytes).decode()
+
+    with open("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hieu.jpg", "rb") as hieu:
+        hieu_image_bytes = hieu.read()
+    hieu_encoded_image = base64.b64encode(hieu_image_bytes).decode()
+ 
     # HTML content with image and font
     html_content = """
     <!DOCTYPE html>
@@ -187,28 +204,28 @@ def main():
   <div class="wrapper">
     <div class="item">
       <div class="polaroid">
-        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hang.jpg" alt="">
+        <img src="data:image/jpeg;base64,{hang_encoded_image}" alt="">
         <div class="caption">Nguyen Viet Hang</div>
       </div>
     </div>
 
     <div class="item">
       <div class="polaroid">
-        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/danh.JPG" alt="">
+        <img src="data:image/jpeg;base64,{danh_encoded_image" alt="">
         <div class="caption">Tran Duy Anh</div>
       </div>
     </div>
 
     <div class="item">
       <div class="polaroid">
-        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/dung.JPG" alt="">
+        <img src="data:image/jpeg;base64,{dung_encoded_image" alt="">
         <div class="caption">Nguyen Manh Dung</div>
       </div>
     </div>
 
     <div class="item">
       <div class="polaroid">
-        <img src="https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/resources/images/hieu.jpg" alt="">
+        <img src="data:image/jpeg;base64,{hieu_encoded_image" alt="">
         <div class="caption">Nguyen Minh Hieu</div>
       </div>
     </div>
