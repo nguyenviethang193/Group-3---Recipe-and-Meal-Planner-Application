@@ -2,23 +2,8 @@
   box-sizing: border-box;
 }
 
-@font-face{
-  font-family: 'Brittany';
-  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BrittanySignature.ttf") format("truetype");
-}
-
-@font-face{
-  font-family: 'Bebas Neue';
-  src: url("https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/BebasNeue-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'Satisfy';
-  src: url("https://https://raw.githubusercontent.com/nguyenviethang193/Group-3---Recipe-and-Meal-Planner-Application/blob/main/Introduction/font/Satisfy-Regular.ttf") format("truetype");
-}
-
 body{
-  background-image: url(Introduction/resources/images/background.jpg);
+  background-image: url(resources/images/background.jpg);
 }
 
 .wrapper {
@@ -32,32 +17,32 @@ body{
 .quote{
   text-align: center;
   margin-top: 2rem; 
-  font-family: 'Satisfy', serif;
-  font-size: 3rem;
+  font-size: 10rem;
   color: #333; 
   font-weight: 100;
+  font-family: 'Brush Script MT';
 }
 
 h1 {
-  font-size: 5rem;
+  font-size: 10rem;
   text-align: center;
   margin-bottom: 0;
   color: orange; 
-  font-family: 'Brittany', serif;
+  font-family: 'Georgia';
+  font-weight: 100;
 }
 
 h2 {
-  font-size: 10rem;
+  font-size: 15rem;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 40px;
   color: #595858; 
-  font-family: 'Bebas Neue', serif;
   line-height: 60px;
 }
 
 .polaroid{
   background: white;
-  padding: 1rem;
+  padding: 2rem;
   box-shadow: 0 0.2rem 1.2rem rgba(0,0,0,0.2);
 }
 
@@ -67,8 +52,8 @@ h2 {
 }
 
 .caption{
-  font-family: 'Brittany', serif;
-  font-size: 5rem;
+  font-family: 'Brush Script MT';
+  font-size: 8rem;
   text-align: center;
   line-height: 2em;
 }
