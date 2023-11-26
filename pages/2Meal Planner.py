@@ -3,7 +3,7 @@ from streamlit import session_state as ss
 import pandas as pd
 import deserialize as ds
 from datetime import datetime,  timedelta
-from Home_def import display_fraction
+from Home_def import display_instruction, display_instruction2
 
 st.set_page_config(layout='wide')
 headercol = st.columns([1, 7])
@@ -108,41 +108,11 @@ with col_display[0]:
                 recipe_list['Input Servings'] = servings_change
                 ss.week_list[week].at[j, i] = recipe_list
                 if ss.recipe_button != -1:
-                    item =  recipe_list.loc[ss.recipe_button]
-                    instruction = item['Instructions'].replace('\n', '<br>')
-                    ingredients = ''
-                    item_ingre = item['Ingredients']
-                    item_servings = item['Servings']
-                    item_input_servings = item['Input Servings']
-                    for j in item_ingre:
-                        if item_ingre[j] != 0:
-                            ingredients += f'{display_fraction(item_ingre[j]/item_servings*item_input_servings)} {j}<br>'
-                        else:
-                            ingredients += f'{j}<br>'
                     with col_display[1]:
-                        item_rating = item['Rating']
-                        st.write(f'**Rating:** {item_rating}⭐')
-                        col4 = st.columns(2)
-                        with col4[0]:
-                            item_total_time = item['Total time']
-                            st.write(f'**Total time:** {item_total_time}')
-                        with col4[1]:
-                            st.write(f'**Servings:** {item_input_servings}')
-                        st.write(f'**Nutrition:**')
-                        col5 = st.columns([1, 1, 1])
-                        with col5[0]:
-                            item_fat = item['Total Fat']
-                            st.write(f'{item_fat}g Fat')
-                        with col5[1]:
-                            item_carbs = item['Total Carbohydrate']
-                            st.write(f'{item_carbs}g Carbs')
-                        with col5[2]:
-                            item_pro = item['Protein']
-                            st.write(f'{item_pro}g Protein')
-                        st.write(f'**Ingredients:**')
-                        st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
-                        st.write('**Instruction:**')
-                        st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+                        item = recipe_list.loc[ss.recipe_button]
+                        item_input_servings = item['Input Servings']
+                        display_instruction(item, item_input_servings)
+                        display_instruction2(item)
                         ss.recipe_button =  -1
 
                 #Remove recipes

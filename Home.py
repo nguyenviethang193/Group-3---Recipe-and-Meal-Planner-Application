@@ -2,7 +2,7 @@ import streamlit as st
 import deserialize as ds
 import pandas as pd
 from streamlit import session_state as ss
-from Home_def import display_fraction
+from Home_def import display_instruction, display_instruction2
 from fractions import Fraction
 
 st.set_page_config(
@@ -10,7 +10,7 @@ st.set_page_config(
     layout='wide'
 )
 
-#Heading and description
+#Heading
 st.markdown("<h1 style='text-align: center;'>Recipe and Meal Planner App</h1>", unsafe_allow_html=True)
 
 #Search bar
@@ -28,8 +28,10 @@ with display_col[2]:
         st.write('')
     find = st.button(':mag_right:')
 
-#Category checkbox
+#Session state
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
+if 'clicked_num' not in ss:
+    ss.clicked_num = -1
 if 'mycookbook' not in ss:
     favourite = empty_cookbook
     mydata = {'Description': [None], 'Recipe list': [favourite]}
@@ -41,6 +43,7 @@ if 'result' not in ss:
 if 'add_button' not in ss:
     ss.add_button = [[1 for i in range(len(ss.result.iloc[j]['Dataset']))] for j in range(len(ss.result))]
 
+#Category checkboxes
 category_list = ['Cuisine', 'Appetizers and Snacks', 'Main Dishes', 'Side Dishes', 'Desserts', 'Drinks']
 dataset = [ds.cuisine_region_list, ds.appetizer_snack_list, ds.maindish_list, ds.sidedish_list, ds.dessert_list, ds.drink_list]
 category_df = pd.DataFrame({'Dataset': dataset}, index=category_list)
@@ -50,7 +53,7 @@ st.write('Category')
 checks = st.columns(6)
 for i in range(6):
     with checks[i]:
-        category_df['Choice'].iloc[i] = st.checkbox(category_list[i])
+        category_df.at[category_df.index[i], 'Choice'] = st.checkbox(category_list[i])
 
 region_list = ['African', 'Asian', 'Brands', 'European', 'Latin American', 'Middle Eastern']
 region_choice = [False for i in range(6)]
@@ -58,6 +61,7 @@ if category_df['Choice'].iloc[0]: #If cuisine is chosen
     for i in range(6):
         region_choice[i] = st.checkbox(region_list[i])
 
+#Find recipes
 if find:
     if len(category_df[category_df['Choice'] == True]) != 0:
         ss.result = category_df[category_df['Choice'] == True].drop('Choice', axis=1)
@@ -102,9 +106,6 @@ for k in range(len(ss.result)):
 
         #Display recipes
         col2 = st.columns(5)
-        if 'clicked_num' not in ss:
-            ss.clicked_num = -1
-        
         var = 5
         if ss.num[k] >= len(category_set) - 5:
             var = len(category_set) - ss.num[k]
@@ -113,6 +114,8 @@ for k in range(len(ss.result)):
             item_name = category_set.index[ss.num[k] + i]
             with col2[i]:
                 st.image(category_set.iloc[ss.num[k] + i]['Image link'])
+
+                #Add recipe to a cookbook
                 addcol = st.columns([9, 2])
                 with addcol[0]:
                     if st.button(category_set.index[ss.num[k] + i]):
@@ -141,8 +144,7 @@ for k in range(len(ss.result)):
                                     st.success('Recipe added successfully')
                                 with newcol1[1]:
                                     st.button('OK')
-                                ss.add_button[k][i] += 1
-                                
+                                ss.add_button[k][i] += 1           
                     else:
                         if st.button('Add', key=item_name+'add'):
                             recipe_list = ss.mycookbook.loc[cookbook, 'Recipe list']
@@ -155,47 +157,16 @@ for k in range(len(ss.result)):
                                 st.button('OK')
                             ss.add_button[k][i] += 1
 
+            #Display recipe instruction
             if ss.clicked_num != -1:
                 item = category_set.iloc[ss.clicked_num]
-                instruction = item['Instructions'].replace('\n', '<br>')
-                ingredients = ''
                 if servings != None:
                     item_servings = servings
                 else:
                     item_servings = item['Servings']
-                item_ingre = item['Ingredients']
-                item_original_servings = item['Servings']
-                for j in item_ingre:
-                    if item_ingre[j] != 0:
-                        ingredients += f'{display_fraction(item_ingre[j]/item_original_servings*item_servings)} {j}<br>'
-                    else:
-                        ingredients += f'{j}<br>'
-                for i in my_ingre:
-                    ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
                 col3 = st.columns(2)
                 with col3[0]:
-                    item_rating = item['Rating']
-                    st.write(f'**Rating:** {item_rating}⭐')
-                    col4 = st.columns(2)
-                    with col4[0]:
-                        item_total_time = item['Total time']
-                        st.write(f'**Total time:** {item_total_time}')
-                    with col4[1]:
-                        st.write(f'**Servings:** {item_servings}')
-                    st.write(f'**Nutrition:**')
-                    col5 = st.columns([1, 1, 1])
-                    with col5[0]:
-                        item_total_fat = item['Total Fat']
-                        st.write(f'{item_total_fat}g Fat')
-                    with col5[1]:
-                        item_total_carbs = item['Total Carbohydrate']
-                        st.write(f'{item_total_carbs}g Carbs')
-                    with col5[2]:
-                        item_pro = item['Protein']
-                        st.write(f'{item_pro}g Protein')
-                    st.write(f'**Ingredients:**')
-                    st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
+                    display_instruction(item, item_servings)
                 with col3[1]:
-                    st.write('**Instruction:**')
-                    st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+                    display_instruction2(item)
                 ss.clicked_num = -1

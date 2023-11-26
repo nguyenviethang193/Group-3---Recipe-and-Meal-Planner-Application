@@ -4,6 +4,8 @@ from Home_def import split_dict
 import deserialize as ds
 
 st.set_page_config(layout='wide')
+
+#Heading
 headercol = st.columns([1, 7])
 with headercol[0]:
     st.markdown(f'<img src="https://media.giphy.com/media/3BZdOcfkLo3PPqrW6z/giphy.gif" width="130">', unsafe_allow_html=True)
@@ -11,6 +13,7 @@ with headercol[1]:
     st.write('')
     st.header('Shopping List')
 
+#Session state
 if 'shop_list' not in ss:
     ss.shop_list = {}
 remove_list = []
@@ -60,4 +63,3 @@ if len(remove_list) != 0:
                 st.success('Items removed successfully')
             with shopcol2[1]:
                 st.button('OK')
-

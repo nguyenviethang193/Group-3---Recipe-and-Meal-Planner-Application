@@ -2,14 +2,12 @@ import streamlit as st
 from streamlit import session_state as ss
 import pandas as pd
 import deserialize as ds
-from  Home_def import display_fraction
+from  Home_def import display_instruction, display_instruction2
 
 st.set_page_config(layout='wide')
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
-if 'mycookbook' not in ss:
-    favourite = empty_cookbook
-    mydata = {'Description': [None], 'Recipe list': [favourite]}
-    ss.mycookbook = pd.DataFrame(mydata, index=['My Favourite'])
+
+#Heading
 headercol = st.columns([1, 7])
 with headercol[0]:
     st.markdown(f'<img src="https://media.giphy.com/media/igVCthAMg37D7FMFrm/giphy.gif" width="130">', unsafe_allow_html=True)
@@ -24,6 +22,10 @@ if 'title_button' not in ss:
     ss.title_button = 1
 if 'des_button' not in ss:
     ss.des_button = 1
+if 'mycookbook' not in ss:
+    favourite = empty_cookbook
+    mydata = {'Description': [None], 'Recipe list': [favourite]}
+    ss.mycookbook = pd.DataFrame(mydata, index=['My Favourite'])
 
 #Search bar
 display_col0 = st.columns(2)
@@ -42,7 +44,7 @@ with display_col0[0]:
                 st.subheader('Create a new cookbook')
                 title = st.text_input('Title *')
                 description = st.text_input('Description')
-                recipe = st.multiselect('Choose your recipes (Optional)', ds.final_recipes_data.index)
+                recipe = st.multiselect('Choose your recipes', ds.final_recipes_data.index)
                 if st.button('Create'):
                     if title == '':
                         st.error('You haven\'t entered title')
@@ -94,8 +96,9 @@ with display_col0[0]:
                                     placeholder='Add recipes', label_visibility='collapsed')
     with col7[2]:
         if st.button('OK', key='addbutton'):
-            add_list = ds.final_recipes_data.loc[recipe_add, :]
-            recipe_list = pd.concat([recipe_list, add_list], ignore_index=False)
+            if len(recipe_add) != 0:
+                add_list = ds.final_recipes_data.loc[recipe_add, :]
+                recipe_list = pd.concat([recipe_list, add_list], ignore_index=False)
             with col6[0]:
                 st.success('Recipes added successfully')
             with col6[1]:
@@ -118,44 +121,13 @@ with display_col0[0]:
             st.markdown(f'<img src="{item_image}" height="38.4">', unsafe_allow_html=True)
             st.write('')
         with display_col3[3]:
-            current_servings = int(item['Input Servings'])
             input_servings = st.number_input(recipe_list.index[m]+'servings', value=int(item['Input Servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed')
             servings_change.append(input_servings)
         with display_col3[2]:
             if st.button(recipe_list.index[m]):
-                instruction = item['Instructions'].replace('\n', '<br>')
-                ingredients = ''
-                item_ingre = item['Ingredients']
-                item_servings = item['Servings']
-                for j in item_ingre:
-                    if item_ingre[j] != 0:
-                        ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
-                    else:
-                        ingredients += f'{j}<br>'
                 with display_col0[1]:
-                    item_rating = item['Rating']
-                    st.write(f'**Rating:** {item_rating}⭐')
-                    col4 = st.columns(2)
-                    with col4[0]:
-                        item_total_time = item['Total time']
-                        st.write(f'**Total time:** {item_total_time}')
-                    with col4[1]:
-                        st.write(f'**Servings:** {input_servings}')
-                    st.write(f'**Nutrition:**')
-                    col5 = st.columns([1, 1, 1])
-                    with col5[0]:
-                        item_fat = item['Total Fat']
-                        st.write(f'{item_fat}g Fat')
-                    with col5[1]:
-                        item_carbs = item['Total Carbohydrate']
-                        st.write(f'{item_carbs}g Carbs')
-                    with col5[2]:
-                        item_pro = item['Protein']
-                        st.write(f'{item_pro}g Protein')
-                    st.write(f'**Ingredients:**')
-                    st.write(f'<p>{ingredients}</p>', unsafe_allow_html=True)
-                    st.write('**Instruction:**')
-                    st.write(f"<p style='text-align: justify;'>{instruction}</p>", unsafe_allow_html=True)
+                    display_instruction(item, input_servings)
+                    display_instruction2(item)
     recipe_list['Input Servings'] = servings_change
     ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list
 
@@ -168,6 +140,7 @@ with display_col0[0]:
             with col6[1]:
                 st.button('OK', key='removerecipes')
 
+    #Modify title and description
     if ss.title_button % 2 == 0:
         with titlechange[0]:
             new_title = st.text_input('New title:', cookbook, label_visibility='collapsed')
@@ -194,6 +167,7 @@ with display_col0[0]:
                     st.button('OK', key='deschange')
                 ss.des_button += 1
 
+    #Remove cookbook
     if cookbook != 'My Favourite':
         if st.button(':red[Remove cookbook]'):
             ss.mycookbook = ss.mycookbook.drop(cookbook, axis=0)

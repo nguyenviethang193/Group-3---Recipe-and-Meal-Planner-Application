@@ -1,32 +1,22 @@
 import streamlit as st
-import base64
+from Home_def import get_img_as_base64
 
 st.set_page_config(layout='wide')
 
 with open('pages/polaroid.css', "r") as css_file:
   st.markdown(f"<style>{css_file.read()}</style>", unsafe_allow_html=True)
   
-with open("Introduction/resources/images/hang.jpg", "rb") as hang:
-    hang_image_bytes = hang.read()
-hang_encoded_image = base64.b64encode(hang_image_bytes).decode()
+hang_encoded_image = get_img_as_base64("Introduction/resources/images/hang.jpg")
+danh_encoded_image = get_img_as_base64("Introduction/resources/images/danh.JPG")
+dung_encoded_image = get_img_as_base64("Introduction/resources/images/dung.JPG")
+hieu_encoded_image = get_img_as_base64("Introduction/resources/images/hieu.jpg")
 
-with open("Introduction/resources/images/danh.JPG", "rb") as danh:
-    danh_image_bytes = danh.read()
-danh_encoded_image = base64.b64encode(danh_image_bytes).decode()
-
-with open("Introduction/resources/images/dung.JPG", "rb") as dung:
-    dung_image_bytes = dung.read()
-dung_encoded_image = base64.b64encode(dung_image_bytes).decode()
-
-with open("Introduction/resources/images/hieu.jpg", "rb") as hieu:
-    hieu_image_bytes = hieu.read()
-hieu_encoded_image = base64.b64encode(hieu_image_bytes).decode()
 col2 = st.columns([2, 1, 2])
 with col2[1]:
   st.markdown(f'<img src="https://media.giphy.com/media/6IfdksCcmX1l5yCqBy/giphy.gif" width="200">', unsafe_allow_html=True)
-    # HTML content with image and font
-html_content = f"""
 
+# HTML content with image and font
+html_content = f"""
   <div class="quote">
     Your meal, our deal!
   </div>
@@ -79,7 +69,7 @@ html_content = f"""
   </div>
     """
 
-    # Use st.markdown to render HTML
+# Use st.markdown to render HTML
 col = st.columns([1, 4, 1])
 with col[1]:
   st.markdown(html_content, unsafe_allow_html=True)
