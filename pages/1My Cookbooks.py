@@ -5,6 +5,11 @@ import deserialize as ds
 from  Home_def import display_fraction
 
 st.set_page_config(layout='wide')
+empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
+if 'mycookbook' not in ss:
+    favourite = empty_cookbook
+    mydata = {'Description': [None], 'Recipe list': [favourite]}
+    ss.mycookbook = pd.DataFrame(mydata, index=['My Favourite'])
 headercol = st.columns([1, 7])
 with headercol[0]:
     st.markdown(f'<img src="https://media.giphy.com/media/igVCthAMg37D7FMFrm/giphy.gif" width="130">', unsafe_allow_html=True)

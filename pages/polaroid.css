@@ -17,10 +17,10 @@ body{
 .quote{
   text-align: center;
   margin-top: 1.5rem; 
-  font-size: 3rem;
+  font-size: 2rem;
   color: #333; 
   font-weight: 100;
-  font-family: 'Brush Script MT';
+  font-family: 'Garamond';
 }
 
 .intro1{
@@ -30,7 +30,7 @@ body{
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   text-align: left;
   margin-top: 0;
   margin-bottom: 0;
@@ -41,7 +41,7 @@ h1 {
 
 .intro{
   text-align: left;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: black;
 }
 
@@ -59,7 +59,7 @@ h1 {
 }
 
 .caption{
-  font-family: 'Brush Script MT';
+  font-family: 'Garamond';
   font-size: 1.2rem;
   text-align: center;
   line-height: 2rem;
@@ -165,7 +165,7 @@ h1 {
 }
 
 h2 {
-  font-size: 3rem;
+  font-size: 2rem;
   text-align: left;
   margin-top: 0;
   margin-bottom: 0;
@@ -176,7 +176,7 @@ h2 {
 
 .paragraph p{
   text-align: justify;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: black;
 
 }

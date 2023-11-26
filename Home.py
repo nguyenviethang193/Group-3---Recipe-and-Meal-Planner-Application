@@ -12,8 +12,6 @@ st.set_page_config(
 
 #Heading and description
 st.markdown("<h1 style='text-align: center;'>Recipe and Meal Planner App</h1>", unsafe_allow_html=True)
-st.markdown("""<p style='text-align: center;'>The Recipe and Meal Planner App is the perfect companion for dedicated chefs and cooking enthusiasts. 
-            With a user-friendly <br>interface and diverse features, this app helps you organize and enjoy your cooking experience efficiently and creatively.</p>""", unsafe_allow_html=True)
 
 #Search bar
 display_col = st.columns([10, 1, 1])

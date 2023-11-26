@@ -21,19 +21,14 @@ dung_encoded_image = base64.b64encode(dung_image_bytes).decode()
 with open("Introduction/resources/images/hieu.jpg", "rb") as hieu:
     hieu_image_bytes = hieu.read()
 hieu_encoded_image = base64.b64encode(hieu_image_bytes).decode()
- 
+col2 = st.columns([2, 1, 2])
+with col2[1]:
+  st.markdown(f'<img src="https://media.giphy.com/media/6IfdksCcmX1l5yCqBy/giphy.gif" width="200">', unsafe_allow_html=True)
     # HTML content with image and font
 html_content = f"""
 
-  <div class = "intro1">
-    <h1>MEET OUR TEAM</h1> 
-
-    <div class = "intro">
-      We are a small passionate group of developers set out to bring convenience to your everyday life, one application at a time.
-  </div>
-
   <div class="quote">
-    "Your meal, our deal!"
+    Your meal, our deal!
   </div>
 
   <div class="wrapper">
@@ -66,17 +61,19 @@ html_content = f"""
     </div>
   </div>
 
+  <div class = "intro1">
+  <div class = "intro">
+      We are a small passionate group of developers set out to bring convenience to your everyday life, one application at a time.
+  </div>
 
   <div class="intro2">
     <h2>ABOUT THIS PROJECT</h2> 
 
     <div class = "paragraph">
       <p>
-        This app will help you plan out your everyday meals according to your diet. Our database consists of hundreds of recipe for you to choose from, ranging from savory to sweet. <br>
+        This app will help you plan out your everyday meals according to your diet. We have hundreds of recipe for you to choose from, ranging from savory to sweet, which allows you to find recipes based on the ingredients and the amount of servings. We provide detailed steps and ingredients needed as well as calculate the amount of nutrition for each recipe. <br>
         <br>
-        This app allows you to find recipes based on the ingredients you have and the aamount of servings you need. For users who are struggling to learn new recipes, this app can provide detailed steps and ingredients needed for each recipe, as well as calculate the amount of fat, carbonhydrate and protein within those recipes. <br>
-        <br>
-        And in case you are on a diet, this app can easily keep track of the nutrition values in each recipe. Additionally, you will have the option to create your very own cook book within the app, allowing you to keep track of your favorite recipes, as well as giving you a grocery list for all the ingredients you would need for all your recipes.
+        You can create your very own cookbook within the app, allowing you to keep track of your favorite recipes, as well as plan weekly meals for individuals or your whole family and create your very own shopping list.
       </p>
     </div>
   </div>
