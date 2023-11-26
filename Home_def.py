@@ -29,7 +29,7 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-def display_instruction(item, input_servings):
+def display_instruction(item, input_servings, my_ingre = []):
     ingredients = ''
     item_ingre = item['Ingredients']
     item_servings = item['Servings']
@@ -38,7 +38,8 @@ def display_instruction(item, input_servings):
             ingredients += f'{display_fraction(item_ingre[j]/item_servings*input_servings)} {j}<br>'
         else:
             ingredients += f'{j}<br>'
-
+    for i in my_ingre:
+        ingredients = ingredients.replace(i, f'<mark style="background-color: grey;">{i}</mark>')
     item_rating = item['Rating']
     st.write(f'**Rating:** {item_rating}⭐')
     col4 = st.columns(2)

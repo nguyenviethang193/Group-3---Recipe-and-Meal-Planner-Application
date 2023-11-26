@@ -166,7 +166,7 @@ for k in range(len(ss.result)):
                     item_servings = item['Servings']
                 col3 = st.columns(2)
                 with col3[0]:
-                    display_instruction(item, item_servings)
+                    display_instruction(item, item_servings, my_ingre)
                 with col3[1]:
                     display_instruction2(item)
                 ss.clicked_num = -1
