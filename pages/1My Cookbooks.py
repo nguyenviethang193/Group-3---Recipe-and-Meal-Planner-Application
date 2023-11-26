@@ -58,6 +58,7 @@ recipe_list = current['Recipe list']
 with display_col0[0]:
     titlecol = st.columns([8, 1])
     titlechange = st.columns([8, 1])
+    
     #Display cookbook
     with titlecol[0]:
         st.write('**Title:**')

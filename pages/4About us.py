@@ -1,5 +1,8 @@
 import streamlit as st
 import base64
+
+st.set_page_config(layout='wide')
+
 with open('pages/polaroid.css', "r") as css_file:
   st.markdown(f"<style>{css_file.read()}</style>", unsafe_allow_html=True)
   
@@ -80,4 +83,6 @@ html_content = f"""
     """
 
     # Use st.markdown to render HTML
-st.markdown(html_content, unsafe_allow_html=True)
+col = st.columns([1, 4, 1])
+with col[1]:
+  st.markdown(html_content, unsafe_allow_html=True)
