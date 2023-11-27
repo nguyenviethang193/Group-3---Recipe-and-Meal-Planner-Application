@@ -3,23 +3,14 @@ from streamlit import session_state as ss
 import pandas as pd
 import deserialize as ds
 from datetime import datetime,  timedelta
-from Home_def import display_instruction, display_instruction2
+from Home_def import display_instruction, display_instruction2, date_form
 
 st.set_page_config(layout='wide')
-headercol = st.columns([1, 7])
-with headercol[0]:
-    st.markdown(f'<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWg0NnZ1Z3U3OW43c3A0dm42ZHNmZnc4N2swcWFlZmNtZXNpbjB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/CkISXfgTSLTmZUOwJE/giphy.gif" width="130">', unsafe_allow_html=True)
-with headercol[1]:
-    st.write('')
-    st.header('Weekly Meal Plan')
 
 row_name = ['Breakfast', 'Lunch', 'Dinner', 'Snack']
 column_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 data = [(pd.DataFrame(columns=ds.final_recipes_data.columns) for i in range(7)) for j in range(4)]
 empty_dataset = pd.DataFrame(data, index=row_name, columns=column_name)
-
-def date_form(a):
-    return a.strftime('%d/%m/%Y')
 
 #Session state
 if 'week_list'not in ss:
@@ -30,11 +21,18 @@ if 'week_list'not in ss:
 if 'recipe_button' not in ss:
     ss.recipe_button = -1
 
-col_display2 = st.columns([15, 1, 11])
-col_display = st.columns([3, 2])
+col0 = st.columns([1, 7])
+with col0[0]:
+    st.markdown(f'<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWg0NnZ1Z3U3OW43c3A0dm42ZHNmZnc4N2swcWFlZmNtZXNpbjB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/CkISXfgTSLTmZUOwJE/giphy.gif" width="130">', unsafe_allow_html=True)
+with col0[1]:
+    st.write('')
+    st.header('Weekly Meal Plan')
+
+col1 = st.columns([15, 1, 11])
+col2 = st.columns([3, 2])
 
 #Choose week
-with col_display2[1]:
+with col1[1]:
     st.write('')
     st.write('')
     if st.button('\+'):
@@ -42,39 +40,39 @@ with col_display2[1]:
         ss.sunday += timedelta(days=7)
         new_week = pd.Series([empty_dataset], index=[f'{date_form(ss.monday)} - {date_form(ss.sunday)}'])
         ss.week_list = pd.concat([new_week, ss.week_list])
-with col_display2[0]:
+with col1[0]:
     week = st.selectbox('Choose a week', options=ss.week_list.index)
 
 #Weekdays
-with col_display[0]:
+with col2[0]:
     current_week = ss.week_list[week]
     for i in column_name:
         with st.expander(i):
             for j in row_name:
                 recipe_list = current_week.loc[j, i]
-                mealcol0 = st.columns([4, 5, 1])
-                mealcol2 = st.columns(3)
-                mealcol1 = st.columns([6, 1])
+                col3 = st.columns([4, 5, 1])
+                col4 = st.columns(3)
+                col5 = st.columns([6, 1])
                 col6 = st.columns([9, 1])
 
                 #Display nutrition for each meal
-                with mealcol0[0]:
+                with col3[0]:
                     st.write(j)
                     st.write('**Nutritions**')
-                with mealcol2[0]:
+                with col4[0]:
                     total_fat = recipe_list['Total Fat']
                     st.write(f'{sum(total_fat)}g Fat')
-                with mealcol2[1]:
+                with col4[1]:
                     total_carbs = recipe_list['Total Carbohydrate']
                     st.write(f'{sum(total_carbs)}g Carbs')
-                with mealcol2[2]:
+                with col4[2]:
                     total_pro = recipe_list['Protein']
                     st.write(f'{sum(total_pro)}g Protein')
 
                 #Add recipes
-                with mealcol0[1]:
+                with col3[1]:
                     recipe_add = st.multiselect(week+i+j+'select', [i for i in ds.final_recipes_data.index if i not in recipe_list.index], placeholder='Add', label_visibility='collapsed')
-                with mealcol0[2]:
+                with col3[2]:
                     button = st.button('OK', key=week+i+j+'add')
                 if button:
                     add_list = ds.final_recipes_data.loc[recipe_add, :]
@@ -108,7 +106,7 @@ with col_display[0]:
                 recipe_list['Input Servings'] = servings_change
                 ss.week_list[week].at[j, i] = recipe_list
                 if ss.recipe_button != -1:
-                    with col_display[1]:
+                    with col2[1]:
                         item = recipe_list.loc[ss.recipe_button]
                         item_input_servings = item['Input Servings']
                         display_instruction(item, item_input_servings)
@@ -117,7 +115,7 @@ with col_display[0]:
 
                 #Remove recipes
                 if len(remove_list) != 0: 
-                    if mealcol1[1].button('Remove', key=week+i+j):
+                    if col5[1].button('Remove', key=week+i+j):
                         ss.week_list[week].at[j, i] = recipe_list.drop(remove_list)
                         with col6[0]:
                             st.success('Recipes removed successfully')

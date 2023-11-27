@@ -11,8 +11,8 @@ danh_encoded_image = get_img_as_base64("Introduction/resources/images/danh.JPG")
 dung_encoded_image = get_img_as_base64("Introduction/resources/images/dung.JPG")
 hieu_encoded_image = get_img_as_base64("Introduction/resources/images/hieu.jpg")
 
-col2 = st.columns([2, 1, 2])
-with col2[1]:
+col0 = st.columns([2, 1, 2])
+with col0[1]:
   st.markdown(f'<img src="https://media.giphy.com/media/6IfdksCcmX1l5yCqBy/giphy.gif" width="200">', unsafe_allow_html=True)
 
 # HTML content with image and font
@@ -70,6 +70,6 @@ html_content = f"""
     """
 
 # Use st.markdown to render HTML
-col = st.columns([1, 4, 1])
-with col[1]:
+col1 = st.columns([1, 4, 1])
+with col1[1]:
   st.markdown(html_content, unsafe_allow_html=True)

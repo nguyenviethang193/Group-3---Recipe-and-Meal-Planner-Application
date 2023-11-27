@@ -10,24 +10,6 @@ st.set_page_config(
     layout='wide'
 )
 
-#Heading
-st.markdown("<h1 style='text-align: center;'>Recipe and Meal Planner App</h1>", unsafe_allow_html=True)
-
-#Search bar
-display_col = st.columns([10, 1, 1])
-with display_col[0]:
-    my_ingre = st.multiselect(
-        label='Choose your ingredients',
-        placeholder='',
-        options=ds.user_search_list
-    )
-with display_col[1]:
-    servings = st.number_input('Servings', value=None, step=1, min_value=1)
-with display_col[2]:
-    for i in range(2):
-        st.write('')
-    find = st.button(':mag_right:')
-
 #Session state
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)
 if 'clicked_num' not in ss:
@@ -42,6 +24,24 @@ if 'result' not in ss:
     ss.result = pd.DataFrame({'Dataset': [ds.final_recipes_data]}, index=['default'])
 if 'add_button' not in ss:
     ss.add_button = [[1 for i in range(len(ss.result.iloc[j]['Dataset']))] for j in range(len(ss.result))]
+
+#Heading
+st.markdown("<h1 style='text-align: center;'>Recipe and Meal Planner App</h1>", unsafe_allow_html=True)
+
+#Search bar
+col0 = st.columns([10, 1, 1])
+with col0[0]:
+    my_ingre = st.multiselect(
+        label='Choose your ingredients',
+        placeholder='',
+        options=ds.user_search_list
+    )
+with col0[1]:
+    servings = st.number_input('Servings', value=None, step=1, min_value=1)
+with col0[2]:
+    for i in range(2):
+        st.write('')
+    find = st.button(':mag_right:')
 
 #Category checkboxes
 category_list = ['Cuisine', 'Appetizers and Snacks', 'Main Dishes', 'Side Dishes', 'Desserts', 'Drinks']
@@ -116,11 +116,11 @@ for k in range(len(ss.result)):
                 st.image(category_set.iloc[ss.num[k] + i]['Image link'])
 
                 #Add recipe to a cookbook
-                addcol = st.columns([9, 2])
-                with addcol[0]:
+                col3 = st.columns([9, 2])
+                with col3[0]:
                     if st.button(category_set.index[ss.num[k] + i]):
                         ss.clicked_num = ss.num[k] + i
-                with addcol[1]:
+                with col3[1]:
                     if st.button('\+', key='+' + category_set.index[ss.num[k] + i]):
                         ss.add_button[k][i] += 1
                 if ss.add_button[k][i] % 2 == 0:
@@ -128,6 +128,8 @@ for k in range(len(ss.result)):
                     cookbookchoice = existed_cookbook[::-1] + ['New']
                     cookbook = st.selectbox('Choose a cookbook', cookbookchoice, key=item_name+'select')
                     recipe_add = category_set.iloc[[ss.num[k]+i], :]
+                    if servings != None:
+                        recipe_add['Input Servings'] = servings
                     if cookbook == 'New':
                         title = st.text_input('Title *', key='title' + item_name)
                         description = st.text_input('Description', key='description' + item_name)
@@ -139,10 +141,10 @@ for k in range(len(ss.result)):
                             else:
                                 new_cookbook = {'Description': description, 'Recipe list': recipe_add}
                                 ss.mycookbook.loc[title] = new_cookbook
-                                newcol1 = st.columns([5, 2])
-                                with newcol1[0]:
+                                col4 = st.columns([5, 2])
+                                with col4[0]:
                                     st.success('Recipe added successfully')
-                                with newcol1[1]:
+                                with col4[1]:
                                     st.button('OK')
                                 ss.add_button[k][i] += 1           
                     else:
@@ -150,10 +152,10 @@ for k in range(len(ss.result)):
                             recipe_list = ss.mycookbook.loc[cookbook, 'Recipe list']
                             recipe_list = pd.concat([recipe_list, recipe_add], ignore_index=False)
                             ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list
-                            newcol1 = st.columns([5, 2])
-                            with newcol1[0]:
+                            col4 = st.columns([5, 2])
+                            with col4[0]:
                                 st.success('Recipe added successfully')
-                            with newcol1[1]:
+                            with col4[1]:
                                 st.button('OK')
                             ss.add_button[k][i] += 1
 
@@ -164,9 +166,9 @@ for k in range(len(ss.result)):
                     item_servings = servings
                 else:
                     item_servings = item['Servings']
-                col3 = st.columns(2)
-                with col3[0]:
+                col5 = st.columns(2)
+                with col5[0]:
                     display_instruction(item, item_servings, my_ingre)
-                with col3[1]:
+                with col5[1]:
                     display_instruction2(item)
                 ss.clicked_num = -1

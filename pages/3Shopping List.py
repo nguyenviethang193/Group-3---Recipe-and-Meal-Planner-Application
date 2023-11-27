@@ -5,61 +5,81 @@ import deserialize as ds
 
 st.set_page_config(layout='wide')
 
-#Heading
-headercol = st.columns([1, 7])
-with headercol[0]:
-    st.markdown(f'<img src="https://media.giphy.com/media/3BZdOcfkLo3PPqrW6z/giphy.gif" width="130">', unsafe_allow_html=True)
-with headercol[1]:
-    st.write('')
-    st.header('Shopping List')
-
 #Session state
 if 'shop_list' not in ss:
     ss.shop_list = {}
+if 'ingre_list' not in ss:
+    ss.ingre_list = ds.user_search_list
+if 'unit_set' not in ss:
+    ss.unit_set = ["jar", "container", "ounce", "oz", "pound", "kg", "qt", "gal","mg", "g", "pt", "l", "ml", "inch", "cm", "package", "bag", "sm", "medium", 
+         "box", "can", "carton", "stick", "slice", "pad", "roll", "head", "cube", "bar", "block", "clove", "sq", "bottle", "tub", "envelope", "leaf", "loaf", "bunch"]
 remove_list = []
-shopcol = st.columns([3, 2, 2, 1, 1])
-shopcol2 = st.columns([12, 1])
-shopcol3 = st.columns(2)
+
+#Heading
+col0 = st.columns([1, 7])
+with col0[0]:
+    st.markdown(f'<img src="https://media.giphy.com/media/3BZdOcfkLo3PPqrW6z/giphy.gif" width="130">', unsafe_allow_html=True)
+with col0[1]:
+    st.write('')
+    st.header('Shopping List')
+
+col1 = st.columns([3, 2, 2, 1, 1])
+col2 = st.columns([12, 1])
+col3 = st.columns(2)
 
 #Add items
-with shopcol[0]:
-    ingre = st.selectbox('Input ingredients', ds.user_search_list, placeholder='Input your ingredient', label_visibility='collapsed')
-with shopcol[1]:
-    ingre_num = st.number_input('Input ingre num', min_value=0.01, value=None, placeholder='Number', label_visibility='collapsed')
-with shopcol[2]:
-    ingre_unit = st.text_input('Input unit', placeholder='Unit', value=None, label_visibility='collapsed')
-
-with shopcol[3]:
+with col1[0]:
+    ingre = st.selectbox('Enter an ingredient', ['other'] + ss.ingre_list)
+    if ingre == 'other':
+        ingre = st.text_input('Enter new ingredient')
+with col1[1]:
+    ingre_num = st.number_input('Enter amount', min_value=0.01, value=None)
+with col1[2]:
+    ingre_unit = st.selectbox('Enter unit', ['None', 'other'] + ss.unit_set)
+    if ingre_unit == 'other':
+        ingre_unit = st.text_input('Enter new unit')
+with col1[3]:
+    st.write('')
+    st.write('')
     if st.button('Add'):
-        if ingre_unit != None:
-            ingre = f'{ingre_unit} {ingre}'
-        if ingre in ss.shop_list:
-            ss.shop_list[ingre] += ingre_num
+        if ingre == None:
+            st.error('You haven\'t entered any ingredient')
         else:
-            ss.shop_list[ingre] = ingre_num
+            if ingre not in ss.ingre_list:
+                ss.ingre_list.append(ingre)
+            if ingre_unit != 'None':
+                ingre = f'{ingre_unit} {ingre}'
+                if ingre_unit not in ss.unit_set:
+                    ss.unit_set.append(ingre_unit)
+            if ingre in ss.shop_list:
+                ss.shop_list[ingre] += ingre_num
+            else:
+                ss.shop_list[ingre] = ingre_num
 
 #Display items
 dict12 = split_dict(ss.shop_list)
 for m in range(2):
-    with shopcol3[m]:
+    with col3[m]:
         for i in dict12[m]:
-            shopcol1 = st.columns([1, 1, 7])
-            with shopcol1[0]:
+            col4 = st.columns([1, 1, 7])
+            with col4[0]:
                 if st.checkbox('Check to remove', key=i, label_visibility='collapsed'):
                     remove_list.append(i)
-            with shopcol1[1]:
+            with col4[1]:
                 new_num = st.number_input(i, min_value=0.01, value=float(ss.shop_list[i]), label_visibility='collapsed')
                 ss.shop_list[i] = new_num
-            with shopcol1[2]:
+            with col4[2]:
                 st.write(i)
 
 #Remove items
 if len(remove_list) != 0:
-    with shopcol[4]:
+    with col1[4]:
+        st.write('')
+        st.write('')
         if st.button('Remove'):
             for i in remove_list:
                 del ss.shop_list[i]
-            with shopcol2[0]:
+            with col2[0]:
                 st.success('Items removed successfully')
-            with shopcol2[1]:
+            with col2[1]:
                 st.button('OK')

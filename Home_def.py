@@ -29,6 +29,9 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
+def date_form(a):
+    return a.strftime('%d/%m/%Y')
+
 def display_instruction(item, input_servings, my_ingre = []):
     ingredients = ''
     item_ingre = item['Ingredients']
