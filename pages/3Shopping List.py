@@ -25,13 +25,12 @@ with col0[1]:
 
 col1 = st.columns([3, 2, 2, 1, 1])
 col2 = st.columns([12, 1])
-col3 = st.columns(2)
 
 #Add items
 with col1[0]:
     ingre = st.selectbox('Enter an ingredient', ['other'] + ss.ingre_list)
     if ingre == 'other':
-        ingre = st.text_input('Enter new ingredient')
+        ingre = st.text_input('Enter new ingredient', value='')
 with col1[1]:
     ingre_num = st.number_input('Enter amount', min_value=0.01, value=None)
 with col1[2]:
@@ -41,23 +40,28 @@ with col1[2]:
 with col1[3]:
     st.write('')
     st.write('')
-    if st.button('Add'):
-        if ingre == None:
+    addbutton = st.button('Add')
+if addbutton == True:
+    if ingre == '' or ingre_num == None:
+        if ingre == '':
             st.error('You haven\'t entered any ingredient')
+        if ingre_num == None:
+            st.error('You haven\'t entered amount')
+    else:
+        if ingre not in ss.ingre_list:
+            ss.ingre_list.append(ingre)
+        if ingre_unit != 'None':
+            ingre = f'{ingre_unit} {ingre}'
+            if ingre_unit not in ss.unit_set:
+                ss.unit_set.append(ingre_unit)
+        if ingre in ss.shop_list:
+            ss.shop_list[ingre] += ingre_num
         else:
-            if ingre not in ss.ingre_list:
-                ss.ingre_list.append(ingre)
-            if ingre_unit != 'None':
-                ingre = f'{ingre_unit} {ingre}'
-                if ingre_unit not in ss.unit_set:
-                    ss.unit_set.append(ingre_unit)
-            if ingre in ss.shop_list:
-                ss.shop_list[ingre] += ingre_num
-            else:
-                ss.shop_list[ingre] = ingre_num
+            ss.shop_list[ingre] = ingre_num
 
 #Display items
 dict12 = split_dict(ss.shop_list)
+col3 = st.columns(2)
 for m in range(2):
     with col3[m]:
         for i in dict12[m]:
