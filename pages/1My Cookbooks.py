@@ -48,6 +48,8 @@ with col1[0]:
                 if st.button('Create'):
                     if title == '':
                         st.error('You haven\'t entered title')
+                    elif title in ss.mycookbook.index:
+                        st.error('Title existed!')
                     else: 
                         new_cookbook_recipe = ds.final_recipes_data.loc[recipe, :].copy()
                         new_cookbook = {'Description': description, 'Recipe list': new_cookbook_recipe}
