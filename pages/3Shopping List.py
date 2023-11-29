@@ -25,6 +25,7 @@ with col0[1]:
 
 col1 = st.columns([3, 2, 2, 1, 1])
 col2 = st.columns([12, 1])
+col5 = st.columns([5, 1])
 
 #Add items
 with col1[0]:
@@ -42,10 +43,11 @@ with col1[3]:
     st.write('')
     addbutton = st.button('Add')
 if addbutton == True:
-    if ingre == '' or ingre_num == None:
-        if ingre == '':
+    if ingre == '':
+        with col5[0]:
             st.error('You haven\'t entered any ingredient')
-        if ingre_num == None:
+    elif ingre_num == None:
+        with col5[0]:
             st.error('You haven\'t entered amount')
     else:
         if ingre not in ss.ingre_list:

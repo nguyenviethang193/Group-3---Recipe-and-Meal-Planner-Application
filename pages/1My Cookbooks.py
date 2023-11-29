@@ -32,7 +32,7 @@ col1 = st.columns(2)
 with col1[0]:
     col2 = st.columns([10, 1])
     with col2[0]:
-        cookbook = st.selectbox('Find cookbook', ss.mycookbook.index.tolist()[::-1], 
+        cookbook = st.selectbox('Find cookbook', ss.mycookbook.index, 
                                 placeholder = 'Choose your cookbooks', label_visibility='collapsed')
     
     #Create a new cookbook
@@ -52,8 +52,8 @@ with col1[0]:
                         st.error('Title existed!')
                     else: 
                         new_cookbook_recipe = ds.final_recipes_data.loc[recipe, :].copy()
-                        new_cookbook = {'Description': description, 'Recipe list': new_cookbook_recipe}
-                        ss.mycookbook.loc[title] = new_cookbook
+                        new_cookbook = pd.DataFrame([{'Description': description, 'Recipe list': new_cookbook_recipe}], index=[title])
+                        ss.mycookbook = pd.concat([new_cookbook, ss.mycookbook])
                         ss.add += 1
                         col3 = st.columns([6, 1])
                         with col3[0]:
@@ -100,7 +100,7 @@ with col1[0]:
         if st.button('OK', key='addbutton'):
             if len(recipe_add) != 0:
                 add_list = ds.final_recipes_data.loc[recipe_add, :]
-                recipe_list = pd.concat([recipe_list, add_list], ignore_index=False)
+                recipe_list = pd.concat([recipe_list, add_list])
             with col10[0]:
                 st.success('Recipes added successfully')
             with col10[1]:
@@ -110,7 +110,6 @@ with col1[0]:
     with col8[0]:
         st.write('**Recipe list:**')
     remove_list = []
-    servings_change = []
     for m in range(len(recipe_list)):
         col11 = st.columns([2, 3, 12, 4])
         item = recipe_list.iloc[m]
@@ -123,14 +122,14 @@ with col1[0]:
             st.markdown(f'<img src="{item_image}" height="38.4">', unsafe_allow_html=True)
             st.write('')
         with col11[3]:
-            input_servings = st.number_input(recipe_list.index[m]+'servings', value=int(item['Input Servings']), step=1, min_value=1, placeholder='Servings', label_visibility='collapsed')
-            servings_change.append(input_servings)
+            input_servings = st.number_input(recipe_list.index[m]+'servings', value=item['Input Servings'], 
+                                             step=1, min_value=1, placeholder='Servings', label_visibility='collapsed')
+            recipe_list.at[recipe_list.index[m], 'Input Servings'] = input_servings
         with col11[2]:
             if st.button(recipe_list.index[m]):
                 with col1[1]:
                     display_instruction(item, input_servings)
                     display_instruction2(item)
-    recipe_list['Input Servings'] = servings_change
     ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list
 
     #Remove recipes
@@ -148,13 +147,17 @@ with col1[0]:
             new_title = st.text_input('New title:', cookbook, label_visibility='collapsed')
         with col5[1]:
             if st.button('OK'):
-                ss.mycookbook = ss.mycookbook.rename(index={cookbook: new_title})
-                ss.mycookbook = pd.concat([ss.mycookbook.drop(new_title), ss.mycookbook.loc[[new_title], :]])
-                with col5[0]:
-                    st.success('Title changed successfully')
-                with col5[1]:
-                    st.button('OK', key='titlechange')
-                ss.title_button += 1
+                if new_title in ss.mycookbook.index:
+                    with col5[0]:
+                        st.error('Title existed!')
+                else:
+                    ss.mycookbook = ss.mycookbook.rename(index={cookbook: new_title})
+                    ss.mycookbook = pd.concat([ss.mycookbook.loc[[new_title], :], ss.mycookbook.drop(new_title)])
+                    with col5[0]:
+                        st.success('Title changed successfully')
+                    with col5[1]:
+                        st.button('OK', key='titlechange')
+                    ss.title_button += 1
      
     if ss.des_button % 2 == 0:
         with col7[0]:
@@ -162,7 +165,7 @@ with col1[0]:
         with col7[1]:
             if st.button('OK', key='changedes'):
                 ss.mycookbook.at[cookbook, 'Description'] = new_description
-                ss.mycookbook = pd.concat([ss.mycookbook.drop(cookbook), ss.mycookbook.loc[[cookbook], :]])
+                ss.mycookbook = pd.concat([ss.mycookbook.loc[[cookbook], :], ss.mycookbook.drop(cookbook)])
                 with col7[0]:
                     st.success('Description changed successfully')
                 with col7[1]:

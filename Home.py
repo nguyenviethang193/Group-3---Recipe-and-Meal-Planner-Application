@@ -64,7 +64,7 @@ if category_df['Choice'].iloc[0]: #If cuisine is chosen
 #Find recipes
 if find:
     if len(category_df[category_df['Choice'] == True]) != 0:
-        ss.result = category_df[category_df['Choice'] == True].drop('Choice', axis=1)
+        ss.result = category_df[category_df['Choice'] == True]
         if any(i == True for i in region_choice) :
             ss.result = ss.result.drop(labels='Cuisine')
             for i in range(len(region_choice)):
@@ -125,8 +125,7 @@ for k in range(len(ss.result)):
                         ss.add_button[k][i] += 1
                 if ss.add_button[k][i] % 2 == 0:
                     existed_cookbook = [i for i in ss.mycookbook.index if item_name not in ss.mycookbook.loc[i, 'Recipe list'].index]
-                    cookbookchoice = existed_cookbook[::-1] + ['New']
-                    cookbook = st.selectbox('Choose a cookbook', cookbookchoice, key=item_name+'select')
+                    cookbook = st.selectbox('Choose a cookbook', existed_cookbook + ['New'], key=item_name+'select')
                     recipe_add = category_set.iloc[[ss.num[k]+i], :]
                     if servings != None:
                         recipe_add['Input Servings'] = servings
@@ -139,8 +138,8 @@ for k in range(len(ss.result)):
                             elif title in ss.mycookbook.index:
                                 st.error('Title existed!')
                             else:
-                                new_cookbook = {'Description': description, 'Recipe list': recipe_add}
-                                ss.mycookbook.loc[title] = new_cookbook
+                                new_cookbook = pd.DataFrame([{'Description': description, 'Recipe list': recipe_add}], index=[title])
+                                ss.mycookbook = pd.concat([new_cookbook, ss.mycookbook])
                                 col4 = st.columns([5, 2])
                                 with col4[0]:
                                     st.success('Recipe added successfully')
@@ -150,7 +149,7 @@ for k in range(len(ss.result)):
                     else:
                         if st.button('Add', key=item_name+'add'):
                             recipe_list = ss.mycookbook.loc[cookbook, 'Recipe list']
-                            recipe_list = pd.concat([recipe_list, recipe_add], ignore_index=False)
+                            recipe_list = pd.concat([recipe_list, recipe_add])
                             ss.mycookbook.at[cookbook, 'Recipe list'] = recipe_list
                             col4 = st.columns([5, 2])
                             with col4[0]:
