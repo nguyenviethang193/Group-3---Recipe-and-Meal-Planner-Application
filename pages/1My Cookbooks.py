@@ -122,7 +122,7 @@ with col1[0]:
             st.markdown(f'<img src="{item_image}" height="38.4">', unsafe_allow_html=True)
             st.write('')
         with col11[3]:
-            input_servings = st.number_input(recipe_list.index[m]+'servings', value=item['Input Servings'], 
+            input_servings = st.number_input(recipe_list.index[m]+'servings', value=int(item['Input Servings']), 
                                              step=1, min_value=1, placeholder='Servings', label_visibility='collapsed')
             recipe_list.at[recipe_list.index[m], 'Input Servings'] = input_servings
         with col11[2]:
@@ -147,7 +147,7 @@ with col1[0]:
             new_title = st.text_input('New title:', cookbook, label_visibility='collapsed')
         with col5[1]:
             if st.button('OK'):
-                if new_title in ss.mycookbook.index:
+                if new_title != cookbook and new_title in ss.mycookbook.index:
                     with col5[0]:
                         st.error('Title existed!')
                 else:
