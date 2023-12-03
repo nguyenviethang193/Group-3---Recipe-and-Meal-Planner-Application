@@ -3,12 +3,17 @@ import re
 from pickle import dump
 from itertools import takewhile, chain
 from fractions import Fraction
+from zipfile import ZipFile
 
 # Read csv file
-recipes = pd.read_csv(r"recipes.csv", index_col=1)
+with ZipFile('original_dataset.zip', 'r') as zip_file:
+   with zip_file.open('Original Dataset/recipes.csv') as csv_file:
+    recipes = pd.read_csv(csv_file, index_col=1)
 recipes.index.name = 'Recipe Name'
 del recipes[recipes.columns[0]]
-ingre_list = pd.read_csv(r"RAW_recipes.csv")['ingredients']
+with ZipFile('original_dataset.zip', 'r') as zip_file:
+   with zip_file.open('Original Dataset/RAW_recipes.csv') as csv_file:
+    ingre_list = pd.read_csv(csv_file)['ingredients']
 
 # Delete duplicate recipes
 recipes = recipes.drop_duplicates()
