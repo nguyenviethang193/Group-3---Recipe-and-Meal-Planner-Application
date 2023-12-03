@@ -55,23 +55,21 @@ for i in range(6):
     with checks[i]:
         category_df.at[category_df.index[i], 'Choice'] = st.checkbox(category_list[i])
 
-region_list = ['African', 'Asian', 'Brands', 'European', 'Latin American', 'Middle Eastern']
-region_choice = [False for i in range(6)]
+region_list = ['African', 'Asian', 'European', 'Latin American', 'Middle Eastern', 'Brands']
+region_dataset = [ds.african_list, ds.asian_list, ds.european_list, ds.latin_list, ds.middle_eastern_list, ds.brands_list]
+region_df = pd.DataFrame({'Dataset': region_dataset}, index=region_list)
+region_df['Choice'] = False
 if category_df['Choice'].iloc[0]: #If cuisine is chosen
-    for i in range(6):
-        region_choice[i] = st.checkbox(region_list[i])
+    for i in region_list:
+        region_df.at[i, 'Choice'] = st.checkbox(i)
 
 #Find recipes
 if find:
     if len(category_df[category_df['Choice'] == True]) != 0:
         ss.result = category_df[category_df['Choice'] == True]
-        if any(i == True for i in region_choice) :
-            ss.result = ss.result.drop(labels='Cuisine')
-            for i in range(len(region_choice)):
-                if region_choice[i] == True:
-                    region_set = ds.cuisine_region_list[ds.cuisine_region_list['Cuisine Category'] == region_list[i]]
-                    new_row = pd.Series({'Dataset': region_set}, name=region_list[i])
-                    ss.result = pd.concat([ss.result, new_row.to_frame().T])
+        region_choice = region_df[region_df['Choice'] == True]
+        if len(region_choice) != 0:
+            ss.result = pd.concat([ss.result.drop(labels='Cuisine'), region_choice])
     else:
         ss.result = pd.DataFrame({'Dataset': [ds.final_recipes_data]}, index=['default'])
 
