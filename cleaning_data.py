@@ -146,6 +146,14 @@ cuisine_drink = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'
 cuisine_appetizer_snack = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'] == 'Appetizers and Snacks']
 cuisine_region = cleaned_recipes_data.loc[cleaned_recipes_data['Cuisine Category'].isin(list_region)]
 
+# Create dataframe for specific regions and brands
+cuisine_european = cuisine_region.loc[cuisine_region['Cuisine Category'] == 'European']
+cuisine_latin = cuisine_region.loc[cuisine_region['Cuisine Category'] == 'Latin American']
+cuisine_asian = cuisine_region.loc[cuisine_region['Cuisine Category'] == 'Asian']
+cuisine_african = cuisine_region.loc[cuisine_region['Cuisine Category'] == 'African']
+cuisine_brands = cuisine_region.loc[cuisine_region['Cuisine Category'] == 'Brands']
+cuisine_middle_eastern = cuisine_region.loc[cuisine_region['Cuisine Category'] == 'Middle Eastern']
+
 # Check for null of results
 cleaned_recipes_data.isnull().sum()
 
