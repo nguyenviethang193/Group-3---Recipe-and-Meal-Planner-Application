@@ -1,5 +1,5 @@
 import streamlit as st
-from Home_def import get_img_as_base64
+from functions import get_img_as_base64
 
 st.set_page_config(layout='wide')
 

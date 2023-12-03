@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit import session_state as ss
-from Home_def import split_dict
+from functions import split_dict
 import deserialize as ds
 
 st.set_page_config(layout='wide')

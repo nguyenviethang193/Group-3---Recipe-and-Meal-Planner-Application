@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit import session_state as ss
 import pandas as pd
 import deserialize as ds
-from  Home_def import display_instruction, display_instruction2
+from  functions import display_instruction, display_instruction2
 
 st.set_page_config(layout='wide')
 empty_cookbook = pd.DataFrame(columns=ds.final_recipes_data.columns)

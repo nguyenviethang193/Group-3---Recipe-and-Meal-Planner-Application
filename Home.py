@@ -2,7 +2,7 @@ import streamlit as st
 import deserialize as ds
 import pandas as pd
 from streamlit import session_state as ss
-from Home_def import display_instruction, display_instruction2
+from functions import display_instruction, display_instruction2
 from fractions import Fraction
 
 st.set_page_config(
