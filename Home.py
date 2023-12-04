@@ -3,7 +3,6 @@ import deserialize as ds
 import pandas as pd
 from streamlit import session_state as ss
 from functions import display_instruction, display_instruction2
-from fractions import Fraction
 
 st.set_page_config(
     page_title="Group 3",
